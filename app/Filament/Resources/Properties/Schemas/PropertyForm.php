@@ -2,10 +2,13 @@
 
 namespace App\Filament\Resources\Properties\Schemas;
 
+use App\Models\Building;
+use App\Models\Floor;
 use App\Models\Location;
+use App\Models\RealEstateArea;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
@@ -17,111 +20,144 @@ class PropertyForm
     {
         return $schema
             ->components([
-                Section::make('بيانات العقار')
+                Section::make('معلومات العقار')
                     ->columns(2)
                     ->schema([
+                        Select::make('real_estate_area_id')
+                            ->label('المنطقة العقارية')
+                            ->searchable()
+                            ->preload()
+                            ->options(fn (): array => RealEstateArea::query()
+                                ->orderBy('name')
+                                ->pluck('name', 'id')
+                                ->all())
+                            ->createOptionForm([
+                                TextInput::make('name')
+                                    ->label('اسم المنطقة العقارية')
+                                    ->required()
+                                    ->unique(table: 'real_estate_areas', column: 'name'),
+                            ])
+                            ->createOptionUsing(fn (array $data) => RealEstateArea::create($data)->getKey()),
+
                         TextInput::make('property_number')
                             ->label('رقم العقار')
                             ->required()
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
-
-                        TextInput::make('real_estate_area')
-                            ->label('المنطقة العقارية')
-                            ->maxLength(255),
-
-                        TextInput::make('floor_number')
-                            ->label('رقم الطابق')
-                            ->numeric()
-                            ->minValue(0),
-
-                        Textarea::make('detailed_address')
-                            ->label('العنوان التفصيلي')
-                            ->rows(2)
-                            ->columnSpanFull(),
                     ]),
 
-                Section::make('الموقع ضمن الحي')
+                Section::make('عنوان السكن')
                     ->columns(2)
                     ->schema([
-                        // Cascading address: choosing a main area populates the
-                        // sub-area options. Not persisted; only used to filter.
-                        Select::make('main_location_id')
-                            ->label('المنطقة الرئيسية')
-                            ->placeholder('اختر المنطقة الرئيسية')
-                            ->options(fn (): array => Location::query()
-                                ->whereNull('parent_id')
-                                ->orderBy('name')
-                                ->pluck('name', 'id')
-                                ->all())
-                            ->live()
-                            ->dehydrated(false)
-                            ->afterStateHydrated(function (Set $set, ?string $state, Get $get): void {
-                                $locationId = $get('location_id');
-
-                                if ($locationId && ! $state) {
-                                    $set('main_location_id', static::rootAncestorId((int) $locationId));
-                                }
-                            })
-                            ->afterStateUpdated(fn (Set $set) => $set('location_id', null)),
-
                         Select::make('location_id')
-                            ->label('المنطقة الفرعية / الموقع التفصيلي')
-                            ->placeholder('اختر الموقع')
+                            ->label('منطقة السكن')
+                            ->placeholder('اختر منطقة السكن')
                             ->searchable()
-                            ->options(fn (Get $get): array => static::subtreeOptions(
-                                $get('main_location_id') ? (int) $get('main_location_id') : null,
-                            )),
+                            ->options(fn (): array => Location::optionsWithFullPath())
+                            ->live()
+                            ->afterStateUpdated(function (Set $set): void {
+                                $set('building_id', null);
+                                $set('floor_id', null);
+                            }),
+
+                        Select::make('building_id')
+                            ->label('رقم البناء')
+                            ->placeholder('اختر رقم البناء')
+                            ->searchable()
+                            ->options(fn (Get $get): array => static::buildingOptions($get('location_id') ? (int) $get('location_id') : null))
+                            ->live()
+                            ->afterStateUpdated(fn (Set $set) => $set('floor_id', null)),
+
+                        Select::make('floor_id')
+                            ->label('الطابق')
+                            ->placeholder('اختر الطابق')
+                            ->searchable()
+                            ->live()
+                            ->options(fn (Get $get): array => static::floorOptions($get('building_id') ? (int) $get('building_id') : null)),
+
+                        Textarea::make('detailed_address')
+                            ->label('عنوان تفصيلي')
+                            ->rows(2)
+                            ->live(onBlur: true)
+                            ->columnSpanFull(),
+
+                        TextInput::make('full_residential_address')
+                            ->label('العنوان الكامل')
+                            ->disabled()
+                            ->dehydrated(false)
+                            ->formatStateUsing(fn ($state, Get $get, ?\App\Models\Property $record): string => static::previewAddress($get, $record))
+                            ->columnSpanFull(),
                     ]),
             ]);
     }
 
-    /**
-     * The main-area (root) ancestor id of a given location.
-     */
-    protected static function rootAncestorId(int $locationId): ?int
+    protected static function previewAddress(Get $get, ?\App\Models\Property $record): string
     {
-        $location = Location::find($locationId);
+        $parts = [];
 
-        while ($location && $location->parent_id) {
-            $location = $location->parent;
+        if ($get('location_id')) {
+            $location = Location::find($get('location_id'));
+            if ($location) {
+                $parts[] = $location->full_path;
+            }
         }
 
-        return $location?->id;
+        if ($get('building_id')) {
+            $building = Building::find($get('building_id'));
+            if ($building) {
+                $parts[] = $building->building_number;
+            }
+        }
+
+        if ($get('floor_id')) {
+            $floor = Floor::find($get('floor_id'));
+            if ($floor) {
+                $parts[] = $floor->label;
+            }
+        }
+
+        if (filled($get('detailed_address'))) {
+            $parts[] = $get('detailed_address');
+        }
+
+        if ($parts !== []) {
+            return implode(', ', $parts);
+        }
+
+        return $record?->full_residential_address ?? '—';
     }
 
     /**
-     * The selected main area plus all of its descendants, keyed for a select.
-     *
      * @return array<int, string>
      */
-    protected static function subtreeOptions(?int $rootId): array
+    protected static function buildingOptions(?int $locationId): array
     {
-        if (! $rootId) {
+        if (! $locationId) {
             return [];
         }
 
-        $all = Location::query()->get(['id', 'name', 'parent_id']);
-        $byParent = $all->groupBy('parent_id');
-
-        $options = [];
-        $walk = function (int $id, string $prefix) use (&$walk, $byParent, $all, &$options): void {
-            $node = $all->firstWhere('id', $id);
-
-            if (! $node) {
-                return;
-            }
-
-            $label = $prefix === '' ? $node->name : $prefix.' / '.$node->name;
-            $options[$id] = $label;
-
-            foreach ($byParent->get($id, collect()) as $child) {
-                $walk($child->id, $label);
-            }
-        };
-
-        $walk($rootId, '');
-
-        return $options;
+        return Building::query()
+            ->where('location_id', $locationId)
+            ->orderBy('building_number')
+            ->pluck('building_number', 'id')
+            ->all();
     }
+
+    /**
+     * @return array<int, string>
+     */
+    protected static function floorOptions(?int $buildingId): array
+    {
+        if (! $buildingId) {
+            return [];
+        }
+
+        return Floor::query()
+            ->where('building_id', $buildingId)
+            ->orderBy('sort_order')
+            ->orderBy('label')
+            ->pluck('label', 'id')
+            ->all();
+    }
+
 }

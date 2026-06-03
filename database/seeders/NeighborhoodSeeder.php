@@ -2,11 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Models\Building;
 use App\Models\Business;
 use App\Models\Family;
+use App\Models\Floor;
 use App\Models\Location;
 use App\Models\Person;
 use App\Models\Property;
+use App\Models\RealEstateArea;
 use Illuminate\Database\Seeder;
 
 class NeighborhoodSeeder extends Seeder
@@ -38,19 +41,34 @@ class NeighborhoodSeeder extends Seeder
             }
         }
 
-        $realEstateAreas = ['المنطقة العقارية أ', 'المنطقة العقارية ب', 'المنطقة العقارية ج'];
+        $realEstateAreaModels = collect([
+            'المنطقة العقارية أ',
+            'المنطقة العقارية ب',
+            'المنطقة العقارية ج',
+        ])->map(fn (string $name) => RealEstateArea::create(['name' => $name]));
 
         // Create properties spread across the leaf locations.
         $properties = [];
         for ($i = 1; $i <= 12; $i++) {
             $location = $leafLocations[($i - 1) % count($leafLocations)];
+            $floorNumber = ($i % 4) + 1;
+
+            $building = Building::firstOrCreate(
+                ['location_id' => $location->id, 'building_number' => '1'],
+            );
+
+            $floor = Floor::firstOrCreate(
+                ['building_id' => $building->id, 'label' => (string) $floorNumber],
+                ['sort_order' => $floorNumber],
+            );
 
             $properties[] = Property::create([
                 'property_number' => 'P-'.str_pad((string) $i, 3, '0', STR_PAD_LEFT),
-                'real_estate_area' => $realEstateAreas[($i - 1) % count($realEstateAreas)],
-                'floor_number' => ($i % 4) + 1,
+                'real_estate_area_id' => $realEstateAreaModels[($i - 1) % $realEstateAreaModels->count()]->id,
                 'detailed_address' => 'عنوان تفصيلي رقم '.$i,
                 'location_id' => $location->id,
+                'building_id' => $building->id,
+                'floor_id' => $floor->id,
             ]);
         }
 

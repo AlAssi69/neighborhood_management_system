@@ -24,7 +24,11 @@ class PersonPdfAction
 
     protected static function stream(Person $person): StreamedResponse
     {
-        $person->loadMissing(['family.head', 'properties.location', 'businesses']);
+        $person->loadMissing([
+            'family.head',
+            'properties' => fn ($query) => $query->withResidentialAddress()->with('realEstateArea'),
+            'businesses',
+        ]);
 
         $pdf = app(PdfService::class)->renderView('pdf.person-form', [
             'person' => $person,

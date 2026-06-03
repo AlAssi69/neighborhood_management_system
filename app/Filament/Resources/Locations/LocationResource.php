@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Locations;
 
+use App\Filament\Resources\Locations\RelationManagers\BuildingsRelationManager;
 use App\Filament\Resources\Locations\Pages\CreateLocation;
 use App\Filament\Resources\Locations\Pages\EditLocation;
 use App\Filament\Resources\Locations\Pages\ListLocations;
@@ -54,7 +55,7 @@ class LocationResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            BuildingsRelationManager::class,
         ];
     }
 

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\People\Tables;
 use App\Filament\Resources\People\Support\PersonPdfAction;
 use App\Models\Location;
 use App\Models\Property;
+use App\Models\RealEstateArea;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -22,6 +23,7 @@ class PeopleTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->with('properties'))
             ->columns([
                 TextColumn::make('national_id')
                     ->label('الرقم الوطني')
@@ -49,6 +51,22 @@ class PeopleTable
                     ->searchable()
                     ->toggleable()
                     ->copyable(),
+
+                TextColumn::make('property_numbers')
+                    ->label('أرقام العقارات')
+                    ->state(fn ($record): string => $record->properties
+                        ->pluck('property_number')
+                        ->filter()
+                        ->unique()
+                        ->implode('، '))
+                    ->placeholder('—')
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query->whereHas(
+                            'properties',
+                            fn (Builder $q) => $q->where('property_number', 'like', '%'.$search.'%'),
+                        );
+                    })
+                    ->toggleable(),
 
                 TextColumn::make('family.family_card_number')
                     ->label('بطاقة العائلة')
@@ -94,18 +112,19 @@ class PeopleTable
 
                 SelectFilter::make('real_estate_area')
                     ->label('المنطقة العقارية')
-                    ->options(fn (): array => Property::query()
-                        ->whereNotNull('real_estate_area')
-                        ->distinct()
-                        ->orderBy('real_estate_area')
-                        ->pluck('real_estate_area', 'real_estate_area')
+                    ->options(fn (): array => RealEstateArea::query()
+                        ->orderBy('name')
+                        ->pluck('name', 'id')
                         ->all())
                     ->query(function (Builder $query, array $data): Builder {
                         if (blank($data['value'] ?? null)) {
                             return $query;
                         }
 
-                        return $query->whereHas('properties', fn (Builder $q) => $q->where('real_estate_area', $data['value']));
+                        return $query->whereHas(
+                            'properties',
+                            fn (Builder $q) => $q->where('real_estate_area_id', $data['value']),
+                        );
                     }),
 
                 Filter::make('property_number')

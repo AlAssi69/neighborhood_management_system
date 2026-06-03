@@ -7,6 +7,7 @@ use App\Models\Family;
 use App\Models\Location;
 use App\Models\Person;
 use App\Models\Property;
+use App\Models\RealEstateArea;
 use App\Filament\Resources\People\Pages\ListPeople;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -30,9 +31,10 @@ class PanelSmokeTest extends TestCase
     {
         $root = Location::create(['name' => 'الحي الأول']);
         $sub = Location::create(['name' => 'الحارة أ', 'parent_id' => $root->id]);
+        $rea = RealEstateArea::create(['name' => 'منطقة 1']);
         $property = Property::create([
             'property_number' => 'P-1',
-            'real_estate_area' => 'منطقة 1',
+            'real_estate_area_id' => $rea->id,
             'location_id' => $sub->id,
         ]);
         $family = Family::create(['family_card_number' => 'F-1', 'total_member_count' => 3]);
@@ -58,7 +60,7 @@ class PanelSmokeTest extends TestCase
         $this->actingAs($this->admin());
         $this->seedMinimal();
 
-        foreach (['people', 'families', 'properties', 'businesses', 'locations'] as $slug) {
+        foreach (['people', 'families', 'properties', 'businesses', 'locations', 'real-estate-areas', 'buildings'] as $slug) {
             $this->get("/admin/{$slug}")->assertSuccessful();
             $this->get("/admin/{$slug}/create")->assertSuccessful();
         }

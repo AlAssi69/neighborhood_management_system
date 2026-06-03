@@ -60,8 +60,7 @@
                 <tr>
                     <th>رقم العقار</th>
                     <th>المنطقة العقارية</th>
-                    <th>الموقع</th>
-                    <th>الطابق</th>
+                    <th>عنوان السكن</th>
                     <th>نوع العلاقة</th>
                 </tr>
             </thead>
@@ -69,9 +68,8 @@
                 @foreach ($person->properties as $property)
                     <tr @class(['even' => $loop->even])>
                         <td>{{ $property->property_number }}</td>
-                        <td>{{ $property->real_estate_area ?: '—' }}</td>
-                        <td>{{ $property->location?->full_path ?: '—' }}</td>
-                        <td>{{ $property->floor_number ?? '—' }}</td>
+                        <td>{{ $property->realEstateArea?->name ?: '—' }}</td>
+                        <td>{{ $property->full_residential_address ?: '—' }}</td>
                         <td>{{ $property->pivot->relation_type === 'owner' ? 'مالك' : 'ساكن' }}</td>
                     </tr>
                 @endforeach

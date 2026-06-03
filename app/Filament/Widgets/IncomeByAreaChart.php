@@ -19,12 +19,12 @@ class IncomeByAreaChart extends ChartWidget
         $totals = [];
 
         Person::query()
-            ->with(['properties:id,real_estate_area'])
+            ->with(['properties.realEstateArea'])
             ->whereNotNull('income')
             ->chunk(200, function ($people) use (&$totals): void {
                 foreach ($people as $person) {
                     $areas = $person->properties
-                        ->pluck('real_estate_area')
+                        ->map(fn ($property) => $property->realEstateArea?->name)
                         ->filter()
                         ->unique();
 

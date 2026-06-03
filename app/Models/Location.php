@@ -28,6 +28,37 @@ class Location extends Model
         return $this->hasMany(Property::class);
     }
 
+    public function buildings(): HasMany
+    {
+        return $this->hasMany(Building::class);
+    }
+
+    /**
+     * All locations keyed by id with full path labels (for select dropdowns).
+     *
+     * @return array<int, string>
+     */
+    public static function optionsWithFullPath(): array
+    {
+        $all = static::query()->orderBy('name')->get(['id', 'name', 'parent_id']);
+        $byId = $all->keyBy('id');
+        $options = [];
+
+        foreach ($all as $location) {
+            $segments = [];
+            $node = $location;
+
+            while ($node) {
+                array_unshift($segments, $node->name);
+                $node = $node->parent_id ? $byId->get($node->parent_id) : null;
+            }
+
+            $options[$location->id] = implode(' / ', $segments);
+        }
+
+        return $options;
+    }
+
     /**
      * IDs of the given location plus all of its descendants.
      *

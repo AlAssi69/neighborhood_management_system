@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Properties\Tables;
 
-use App\Models\Property;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -16,6 +15,7 @@ class PropertiesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->withResidentialAddress()->with('realEstateArea'))
             ->columns([
                 TextColumn::make('property_number')
                     ->label('رقم العقار')
@@ -23,21 +23,24 @@ class PropertiesTable
                     ->sortable()
                     ->copyable(),
 
-                TextColumn::make('real_estate_area')
+                TextColumn::make('realEstateArea.name')
                     ->label('المنطقة العقارية')
                     ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('location.name')
-                    ->label('الموقع')
-                    ->placeholder('—')
-                    ->searchable(),
-
-                TextColumn::make('floor_number')
-                    ->label('الطابق')
-                    ->numeric()
                     ->sortable()
-                    ->toggleable(),
+                    ->placeholder('—'),
+
+                TextColumn::make('full_residential_address')
+                    ->label('عنوان السكن')
+                    ->searchable(query: function ($query, string $search) {
+                        $query->where(function ($q) use ($search) {
+                            $q->where('detailed_address', 'like', "%{$search}%")
+                                ->orWhereHas('location', fn ($lq) => $lq->where('name', 'like', "%{$search}%"))
+                                ->orWhereHas('building', fn ($bq) => $bq->where('building_number', 'like', "%{$search}%"))
+                                ->orWhereHas('floor', fn ($fq) => $fq->where('label', 'like', "%{$search}%"));
+                        });
+                    })
+                    ->wrap()
+                    ->placeholder('—'),
 
                 TextColumn::make('residents_count')
                     ->label('عدد الساكنين')
@@ -52,20 +55,17 @@ class PropertiesTable
                     ->toggleable(),
             ])
             ->filters([
-                SelectFilter::make('location_id')
-                    ->label('الموقع')
-                    ->relationship('location', 'name')
+                SelectFilter::make('real_estate_area_id')
+                    ->label('المنطقة العقارية')
+                    ->relationship('realEstateArea', 'name')
                     ->searchable()
                     ->preload(),
 
-                SelectFilter::make('real_estate_area')
-                    ->label('المنطقة العقارية')
-                    ->options(fn (): array => Property::query()
-                        ->whereNotNull('real_estate_area')
-                        ->distinct()
-                        ->orderBy('real_estate_area')
-                        ->pluck('real_estate_area', 'real_estate_area')
-                        ->all()),
+                SelectFilter::make('location_id')
+                    ->label('منطقة السكن')
+                    ->relationship('location', 'name')
+                    ->searchable()
+                    ->preload(),
             ])
             ->defaultSort('property_number')
             ->recordActions([

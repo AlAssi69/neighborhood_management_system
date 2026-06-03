@@ -42,13 +42,18 @@ class PropertiesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->withResidentialAddress()->with('realEstateArea'))
             ->recordTitleAttribute('property_number')
             ->columns([
                 TextColumn::make('property_number')
                     ->label('رقم العقار')
                     ->searchable(),
-                TextColumn::make('location.name')
-                    ->label('الموقع')
+                TextColumn::make('realEstateArea.name')
+                    ->label('المنطقة العقارية')
+                    ->placeholder('—'),
+                TextColumn::make('full_residential_address')
+                    ->label('عنوان السكن')
+                    ->wrap()
                     ->placeholder('—'),
                 TextColumn::make('pivot.relation_type')
                     ->label('نوع العلاقة')

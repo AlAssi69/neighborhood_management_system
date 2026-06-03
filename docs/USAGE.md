@@ -50,18 +50,20 @@
 
 **العربية:**
 
-1. **المناطق** — بناء شجرة المناطق (أب ثم أبناء).
-2. **العقارات** — تسجيل كل عقار مع موقعه والمنطقة العقارية.
-3. **العائلات** — إنشاء العائلات (رقم البطاقة، رب العائلة اختياري).
-4. **الأشخاص** — إدخال الأفراد وربطهم بالعائلة.
-5. **العلاقات** — من صفحة تعديل الشخص: عقارات، محال، مستندات.
-6. **التصدير** — PDF رسمي أو CSV من لوحة المعلومات عند الحاجة.
+1. **المناطق** — بناء شجرة مناطق السكن (أب ثم أبناء).
+2. **المباني والطوابق** — لكل منطقة سكن: أرقام المباني، ثم الطوابق لكل مبنى (من تبويب المباني أو من صفحة المنطقة).
+3. **المناطق العقارية** — تعريف المناطق العقارية (قائمة مرجعية للعقارات).
+4. **العقارات** — تسجيل كل عقار: المنطقة العقارية + رقم العقار، وعنوان السكن (منطقة سكن، بناء، طابق، تفصيلي).
+5. **العائلات** — إنشاء العائلات (رقم البطاقة، رب العائلة اختياري).
+6. **الأشخاص** — إدخال الأفراد وربطهم بالعائلة (يظهر رقم العقار في قائمة الأشخاص عند الربط).
+7. **العلاقات** — من صفحة تعديل الشخص: عقارات، محال، مستندات.
+8. **التصدير** — PDF رسمي أو CSV من لوحة المعلومات عند الحاجة.
 
 ## Locations / المناطق
 
-**English:** **المناطق (العناوين)** supports unlimited nesting via a parent location. Create top-level areas first, then child areas. Properties and cascading dropdowns in forms use this tree for residential and real-estate addressing.
+**English:** **المناطق (العناوين)** supports unlimited nesting via a parent location. Create top-level areas first, then child areas. This tree is **منطقة السكن** on each property. Add **buildings** and **floors** per location under **المباني** or from the location edit page. **المناطق العقارية** is a separate lookup used for real-estate registry and income statistics.
 
-**العربية:** كل منطقة يمكن أن يكون لها **منطقة أب**. أنشئ المستوى الأعلى أولاً ثم الفروع. تُستخدم الشجرة في نماذج العقارات والعناوين المتسلسلة.
+**العربية:** الشجرة = **منطقة السكن**. أضف **المباني** و**الطوابق** لكل منطقة قبل تعبئة العقارات. **المنطقة العقارية** قائمة مستقلة عن شجرة السكن.
 
 ## Families and people / العائلات والأشخاص
 
@@ -81,12 +83,12 @@ When editing a family, assign a head person from members. When a head person is 
 
 **English:**
 
-- **العقارات (Properties):** `property_number`, link to a **location**, `real_estate_area` (used in income statistics), floor and address detail fields as defined in the form.
+- **العقارات (Properties):** **Real-estate layer:** `property_number`, **المنطقة العقارية** (lookup). **Residential layer:** **منطقة السكن** (location tree), **رقم البناء**, **الطابق** (cascading dropdowns), **عنوان تفصيلي**. The list shows a combined **عنوان السكن** field.
 - **المحال التجارية (Businesses):** name, commercial register number, linked **property** and **owner person**.
 
 **العربية:**
 
-- **العقارات:** رقم عقار، موقع، منطقة عقارية (للإحصائيات).
+- **العقارات:** رقم عقار + منطقة عقارية؛ عنوان سكن = منطقة سكن، بناء، طابق، تفصيلي (يُعرض مجمّعاً في الجدول).
 - **المحال:** اسم، سجل تجاري، عقار، مالك (شخص).
 
 ## Linking a person / ربط الشخص
