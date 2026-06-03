@@ -1,0 +1,606 @@
+@import './syrian-tokens.css';
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@config 'tailwind.config.js';
+
+/*
+ * Levantine Executive (light) + Imperial Heritage (dark)
+ * Syrian visual identity — docs/design/DESIGN.md, docs/design/DESIGN-dark.md
+ */
+
+/* --- Typography --- */
+.fi-body {
+    @apply font-sans;
+}
+
+.fi-header-heading,
+.fi-section-header-heading,
+.dept-hub-card__title {
+    font-family: 'itf Qomra Arabic', Cairo, sans-serif;
+    font-weight: 900;
+}
+
+.sy-label-mono {
+    @apply text-xs font-medium uppercase tracking-wider;
+}
+
+html.dark .sy-label-mono {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    letter-spacing: 0.08em;
+}
+
+@layer components {
+    .sy-accent-bar {
+        @apply border-s-4 border-sy-gold;
+    }
+
+    .sy-toolbar-band {
+        @apply rounded-xl border border-sy-border-card bg-sy-green-pale p-4;
+    }
+
+    .sy-table-head {
+        @apply bg-sy-green-soft font-bold text-sy-green;
+        border-bottom: 2px solid var(--sy-border-gold);
+    }
+
+    .sy-dept-card {
+        @apply block rounded-lg border border-sy-border-card bg-sy-green-pale p-4 transition;
+        @apply hover:border-sy-gold;
+    }
+
+    .sy-dept-card__title {
+        @apply text-lg font-semibold text-sy-green;
+    }
+
+    .sy-dept-card__desc {
+        @apply mt-1 text-sm text-sy-gray;
+    }
+
+    .sy-project-card {
+        @apply block rounded-lg border border-sy-border-bronze bg-sy-bronze-soft p-4 transition;
+        @apply hover:border-sy-bronze;
+    }
+
+    .progress-field-label {
+        @apply sy-label-mono mb-1 block text-sy-green;
+    }
+
+    .progress-field-input {
+        @apply block h-10 min-w-[9rem] rounded border border-sy-border-input bg-sy-white px-2.5 text-sm text-sy-ink;
+        @apply focus:border-sy-green focus:outline-none focus:ring-4 focus:ring-[var(--sy-focus-ring)];
+    }
+
+    .progress-field--inline .progress-field-input {
+        @apply min-w-[8.5rem];
+    }
+
+    .progress-field-select {
+        @apply cursor-pointer;
+    }
+
+    .sy-letterhead {
+        @apply text-center;
+    }
+
+    .sy-letterhead--top {
+        @apply mb-6 border-b border-sy-border-gold pb-5;
+    }
+
+    .sy-letterhead--footer {
+        @apply mt-8 border-t border-sy-border-gold pt-5;
+    }
+
+    .sy-letterhead__line {
+        @apply m-0 text-sy-ink;
+        font-family: 'itf Qomra Arabic', Cairo, sans-serif;
+        font-weight: 900;
+        line-height: 1.35;
+    }
+
+    .sy-letterhead__line--republic {
+        @apply mb-1 text-2xl text-sy-green-deep;
+    }
+
+    .sy-letterhead__line--republic-footer {
+        @apply text-xl;
+    }
+
+    .sy-letterhead__line--ministry {
+        @apply mb-0.5 text-lg text-sy-green-deep;
+    }
+
+    .sy-letterhead__line--holding {
+        @apply text-base text-sy-ink;
+    }
+
+    .sy-letterhead__line--company {
+        @apply text-base text-sy-ink;
+    }
+
+    .sy-letterhead__line--directorate {
+        @apply mt-1 text-lg text-sy-green-deep;
+    }
+
+    .progress-sort-controls .progress-toolbar {
+        @apply rounded-lg border border-sy-border-strong bg-sy-green-pale p-2;
+    }
+
+    .dept-hub-card {
+        @apply block rounded-lg border-2 p-6 text-center no-underline transition;
+    }
+
+    .dept-hub-card__title {
+        @apply text-xl;
+    }
+
+    .dept-hub-card__desc {
+        @apply mt-2 text-sm text-sy-gray;
+    }
+
+    .dept-hub-card--finance {
+        @apply border-sy-border-gold bg-sy-gold-soft;
+    }
+
+    .dept-hub-card--finance .dept-hub-card__title {
+        @apply text-sy-green-deep;
+    }
+
+    .dept-hub-card--finance:hover {
+        @apply border-sy-gold;
+    }
+
+    .dept-hub-card--projects {
+        @apply border-sy-border-bronze bg-sy-bronze-soft;
+    }
+
+    .dept-hub-card--projects .dept-hub-card__title {
+        @apply text-sy-bronze;
+    }
+
+    .dept-hub-card--projects:hover {
+        @apply border-sy-bronze;
+    }
+
+    .dept-hub-card--tasks {
+        @apply border-sy-border-green bg-sy-green-pale;
+    }
+
+    .dept-hub-card--tasks .dept-hub-card__title {
+        @apply text-sy-green;
+    }
+
+    .dept-hub-card--tasks:hover {
+        @apply border-sy-green;
+    }
+
+    .progress-delta-badge {
+        @apply inline-flex items-center justify-center rounded-md px-2 py-0.5 text-[0.6875rem] font-semibold leading-tight whitespace-nowrap;
+    }
+
+    .progress-delta-badge--none {
+        @apply bg-sy-green-pale text-sy-gray;
+    }
+
+    .progress-delta-badge--flat {
+        @apply bg-sy-gold-soft text-sy-bronze;
+    }
+
+    .progress-delta-badge--positive {
+        @apply bg-sy-green-soft text-sy-green-deep;
+    }
+
+    .progress-delta-badge--negative {
+        @apply bg-red-100 text-red-800;
+    }
+
+    html.dark .progress-delta-badge--negative {
+        @apply bg-red-950 text-red-300;
+    }
+
+    .excel-root-preview {
+        @apply sy-accent-bar mt-6 rounded-lg border border-sy-border-card bg-sy-white p-4;
+    }
+
+    .excel-root-preview__term {
+        @apply font-semibold text-sy-green;
+    }
+
+    .excel-root-preview__value {
+        @apply mt-1 text-sy-gray;
+    }
+
+    .excel-root-preview__path {
+        @apply font-mono text-xs;
+    }
+
+    .excel-root-preview__warning {
+        @apply mt-3 rounded-md border border-sy-border-gold bg-sy-gold-soft p-3 text-sm text-sy-green-deep;
+    }
+
+    .sy-data-table thead tr {
+        @apply sy-table-head;
+    }
+
+    .sy-data-table thead th {
+        @apply font-bold;
+        font-size: 1.0625em;
+    }
+
+    .sy-data-table tbody tr > :first-child {
+        @apply font-bold;
+        font-size: 1.0625em;
+    }
+
+    .dept-tasks-table thead tr > :first-child,
+    .dept-tasks-table tbody tr > :first-child {
+        @apply font-normal;
+        font-size: inherit;
+    }
+
+    .sy-data-table tbody tr:nth-child(even) {
+        @apply bg-sy-green-zebra;
+    }
+
+    .sy-data-table tbody tr:hover {
+        @apply bg-sy-green-soft;
+    }
+
+    .sy-data-table td,
+    .sy-data-table th {
+        @apply px-2 py-2;
+    }
+
+    .sy-data-table tfoot tr,
+    .sy-data-table .sy-table-total-row {
+        @apply border-t-2 border-sy-border-gold bg-sy-gold-soft font-bold text-sy-green-deep;
+    }
+
+    .sy-data-table tfoot tr > :first-child,
+    .sy-data-table tfoot tr > :not(:first-child),
+    .sy-data-table .sy-table-total-row > :first-child,
+    .sy-data-table .sy-table-total-row > :not(:first-child) {
+        font-size: 1.0625em;
+    }
+
+    .progress-week-multi-picker {
+        @apply p-3;
+    }
+
+    .progress-week-multi-picker.sy-toolbar-band {
+        @apply mb-0;
+    }
+
+    .progress-week-multi-picker__header {
+        @apply mb-2 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1;
+    }
+
+    .progress-week-multi-picker__label {
+        @apply text-sm font-semibold text-sy-green;
+    }
+
+    .progress-week-multi-picker__hint {
+        @apply text-xs font-medium text-sy-gray;
+    }
+
+    .progress-week-multi-picker__hint--empty {
+        @apply text-amber-800;
+    }
+
+    .progress-week-multi-picker__row {
+        @apply flex items-center gap-2;
+    }
+
+    .progress-week-multi-picker__track {
+        @apply flex min-w-0 flex-1 flex-wrap gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+    }
+
+    .progress-week-multi-picker__scroll {
+        @apply flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-sy-border-strong bg-sy-white text-sy-green transition;
+        @apply hover:bg-sy-green-soft disabled:pointer-events-none disabled:opacity-30;
+    }
+
+    .progress-week-multi-picker__clear {
+        @apply shrink-0 rounded-lg border border-sy-border-strong bg-sy-white px-3 py-1.5 text-xs font-medium text-sy-gray transition;
+        @apply hover:border-sy-green hover:bg-sy-green-soft hover:text-sy-green-deep;
+        @apply disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-sy-border-strong disabled:hover:bg-sy-white disabled:hover:text-sy-gray;
+    }
+
+    .progress-week-pill {
+        @apply shrink-0 rounded-lg border border-sy-border-strong bg-sy-white px-3 py-1.5 text-sm font-medium text-sy-gray transition;
+        @apply hover:border-sy-green hover:text-sy-green-deep;
+    }
+
+    .progress-week-pill--selected {
+        @apply border-sy-green-deep bg-sy-green-deep text-white shadow-sm;
+        @apply hover:border-sy-green hover:bg-sy-green hover:text-white;
+    }
+
+    .progress-segmented-control .progress-week-pill--selected,
+    .progress-segmented-control button.bg-primary-600 {
+        @apply border-sy-green-deep bg-sy-green-deep text-white;
+    }
+}
+
+/* --- Light: Filament panel shell --- */
+html:not(.dark) .fi-body {
+    @apply bg-sy-cream text-sy-ink;
+}
+
+html:not(.dark) .fi-main {
+    @apply bg-sy-cream;
+}
+
+html:not(.dark) .fi-topbar nav {
+    @apply border-b-[3px] border-sy-gold bg-sy-white;
+    box-shadow: none;
+    --tw-ring-shadow: none;
+}
+
+html:not(.dark) .fi-sidebar {
+    @apply border-e border-sy-border-strong bg-sy-green-pale;
+    --tw-ring-shadow: none;
+}
+
+html:not(.dark) .fi-sidebar-header {
+    @apply border-b border-sy-border-green bg-sy-green-soft;
+}
+
+html:not(.dark) .fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn {
+    @apply rounded-lg bg-sy-white ring-1 ring-[var(--sy-border-card)];
+}
+
+html:not(.dark) .fi-section-header {
+    @apply border-b border-sy-gold-muted;
+}
+
+html:not(.dark) .fi-section-header-heading {
+    @apply text-sy-green-deep;
+}
+
+html:not(.dark) .fi-section-header-icon {
+    @apply text-sy-gold;
+}
+
+html:not(.dark) .fi-sidebar-item-button {
+    @apply relative font-medium text-sy-gray hover:bg-sy-green-soft hover:text-sy-green-deep;
+}
+
+html:not(.dark) .fi-sidebar-item-button.fi-active,
+html:not(.dark) .fi-sidebar-item.fi-active .fi-sidebar-item-button {
+    @apply bg-sy-green text-sy-on-primary shadow-sm;
+    border-inline-start: 4px solid var(--sy-gold);
+}
+
+html:not(.dark) .fi-sidebar-item.fi-active .fi-sidebar-item-icon,
+html:not(.dark) .fi-sidebar-item-button.fi-active .fi-sidebar-item-icon {
+    @apply text-sy-gold;
+}
+
+html:not(.dark) .fi-sidebar-item.fi-active .fi-sidebar-item-label {
+    @apply text-sy-on-primary;
+}
+
+html:not(.dark) .fi-topbar-item-button {
+    @apply text-sy-gray hover:text-sy-green-deep;
+}
+
+html:not(.dark) .fi-topbar-open-sidebar-btn {
+    @apply text-sy-gray hover:text-sy-green-deep;
+}
+
+html:not(.dark) .fi-topbar-open-sidebar-btn:hover {
+    @apply bg-sy-green-soft;
+}
+
+html:not(.dark) .fi-header-heading {
+    @apply text-sy-green-deep;
+}
+
+html:not(.dark) .fi-header-subheading {
+    @apply text-sy-muted;
+}
+
+html:not(.dark) .fi-btn-color-primary {
+    @apply focus:ring-4 focus:ring-[var(--sy-focus-ring)];
+}
+
+/* --- Dark: Imperial Heritage --- */
+html.dark .fi-body {
+    @apply bg-sy-cream text-sy-ink;
+}
+
+html.dark .fi-main {
+    @apply bg-sy-cream text-sy-ink;
+}
+
+html.dark .fi-topbar nav {
+    @apply border-b-2 border-sy-gold bg-sy-forest;
+    box-shadow: none;
+    --tw-ring-shadow: none;
+}
+
+html.dark .fi-sidebar {
+    @apply border-e-2 border-sy-gold bg-sy-forest;
+    --tw-ring-shadow: none;
+}
+
+html.dark .fi-sidebar-header {
+    @apply border-b border-sy-border-gold bg-sy-green-deep;
+}
+
+html.dark .fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn {
+    @apply rounded-lg bg-sy-green-pale ring-1 ring-[var(--sy-border-strong)];
+}
+
+html.dark .fi-section-header {
+    @apply border-b border-sy-border-gold;
+}
+
+html.dark .fi-section-header-heading {
+    @apply text-sy-accent;
+}
+
+html.dark .fi-section-header-icon {
+    @apply text-sy-gold;
+}
+
+html.dark .fi-sidebar-item-button {
+    @apply relative font-medium text-sy-gray hover:bg-sy-green-soft hover:text-sy-accent;
+}
+
+html.dark .fi-sidebar-item-button.fi-active,
+html.dark .fi-sidebar-item.fi-active .fi-sidebar-item-button {
+    @apply bg-sy-green-deep text-sy-accent;
+    box-shadow: inset 0 -4px 0 0 var(--sy-gold);
+}
+
+html.dark .fi-sidebar-item.fi-active .fi-sidebar-item-icon,
+html.dark .fi-sidebar-item-button.fi-active .fi-sidebar-item-icon {
+    @apply text-sy-gold;
+}
+
+html.dark .fi-sidebar-item.fi-active .fi-sidebar-item-label {
+    @apply text-sy-accent;
+}
+
+html.dark .fi-topbar-item-button {
+    @apply text-sy-gray hover:text-sy-gold;
+}
+
+html.dark .fi-topbar-open-sidebar-btn {
+    @apply text-sy-gray hover:text-sy-gold;
+}
+
+html.dark .fi-topbar-open-sidebar-btn:hover {
+    @apply bg-sy-green-deep;
+}
+
+html.dark .fi-header-heading {
+    @apply text-sy-accent;
+}
+
+html.dark .fi-header-subheading {
+    @apply text-sy-gray;
+}
+
+html.dark .fi-btn-color-primary {
+    --tw-bg-opacity: 1;
+    background-color: var(--sy-green-deep) !important;
+    color: var(--sy-accent) !important;
+}
+
+html.dark .fi-btn-color-primary:hover {
+    background-color: var(--sy-green-mid) !important;
+}
+
+html.dark .fi-btn-color-primary:focus {
+    @apply ring-4 ring-[var(--sy-focus-ring)];
+}
+
+html.dark .fi-input-wrp {
+    @apply rounded-none border-0 border-b-2 border-sy-gray bg-sy-charcoal;
+}
+
+html.dark .fi-input-wrp:focus-within {
+    @apply border-sy-gold;
+}
+
+html.dark .fi-dropdown-panel,
+html.dark .fi-modal-window {
+    box-shadow: var(--sy-shadow-hard);
+}
+
+html.dark .dept-hub-card--finance .dept-hub-card__title {
+    @apply text-sy-gold;
+}
+
+html.dark .dept-hub-card--projects .dept-hub-card__title {
+    @apply text-sy-bronze;
+}
+
+html.dark .dept-hub-card--tasks .dept-hub-card__title {
+    @apply text-sy-green;
+}
+
+html.dark .progress-delta-badge--positive {
+    @apply bg-sy-green-soft text-sy-green;
+}
+
+html.dark .progress-delta-badge--flat {
+    @apply bg-sy-gold-soft text-sy-gold;
+}
+
+html.dark .excel-root-preview__term {
+    @apply text-sy-green;
+}
+
+html.dark .excel-root-preview__warning {
+    @apply border-sy-border-gold bg-sy-gold-soft text-sy-accent;
+}
+
+html.dark .progress-segmented-control button.bg-primary-600,
+html.dark .progress-week-pill--selected {
+    background-color: var(--sy-green-deep) !important;
+    border-color: var(--sy-green-deep) !important;
+    color: var(--sy-accent) !important;
+}
+
+html.dark .progress-week-multi-picker__hint--empty {
+    @apply text-sy-gold;
+}
+
+html.dark .progress-week-multi-picker__clear:disabled {
+    @apply opacity-40;
+}
+
+html.dark .sy-letterhead__line--republic,
+html.dark .sy-letterhead__line--ministry,
+html.dark .sy-letterhead__line--directorate {
+    @apply text-sy-green;
+}
+
+html.dark .sy-letterhead__line--holding,
+html.dark .sy-letterhead__line--company {
+    @apply text-sy-ink;
+}
+
+html.dark .sy-data-table tfoot tr,
+html.dark .sy-data-table .sy-table-total-row {
+    @apply text-sy-accent;
+}
+
+html.dark .fi-section-content .text-3xl.font-semibold {
+    color: var(--sy-accent);
+}
+
+html.dark .fi-section-content,
+html.dark .fi-field-wrp-label,
+html.dark .fi-input,
+html.dark .fi-ta-text {
+    @apply text-sy-ink;
+}
+
+html.dark .fi-ta-header-description {
+    @apply text-sy-gray;
+}
+
+html.dark .sy-dept-card__desc,
+html.dark .dept-hub-card__desc,
+html.dark .excel-root-preview__value {
+    @apply text-sy-gray;
+}
+
+html.dark .fi-ta-header-cell,
+html.dark .fi-ta-cell,
+html.dark .fi-fo-field-wrp-label,
+html.dark .fi-fo-placeholder {
+    @apply text-sy-ink;
+}
+
+html.dark .fi-wi-stats-overview-stat-label {
+    @apply text-sy-gray;
+}
+
+html.dark .progress-field-label {
+    @apply text-sy-green;
+}

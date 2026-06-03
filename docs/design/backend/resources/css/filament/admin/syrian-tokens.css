@@ -1,0 +1,119 @@
+/* Syrian visual identity — national brand palette (Orontes, Palmyra, Basalt) */
+:root {
+    --sy-primary: #042623;
+    --sy-primary-dark: #042623;
+    --sy-on-primary: #edebe0;
+    --sy-primary-container: #0a4a42;
+    --sy-primary-dim: #0d5c4a;
+
+    --sy-cream: #edebe0;
+    --sy-paper: #edebe0;
+    --sy-white: #ffffff;
+    --sy-green: #042623;
+    --sy-green-deep: #042623;
+    --sy-green-mid: #0a4a42;
+    --sy-green-soft: #d4e8e2;
+    --sy-green-pale: #ecf4f1;
+    --sy-green-zebra: #e8f2ef;
+    --sy-gold: #b9a779;
+    --sy-gold-soft: #f3ede0;
+    --sy-gold-muted: #e8dcc4;
+    --sy-bronze: #988561;
+    --sy-bronze-soft: #f0ebe3;
+    --sy-ink: #161616;
+    --sy-gray: #3d3a3b;
+    --sy-muted: #3d3a3b;
+    --sy-accent: #edebe0;
+    --sy-forest: #042623;
+    --sy-charcoal: #161616;
+    --sy-umber: #3d3a3b;
+    --sy-border-subtle: rgba(61, 58, 59, 0.15);
+    --sy-border-strong: rgba(61, 58, 59, 0.28);
+    --sy-border-input: rgba(61, 58, 59, 0.25);
+    --sy-border-gold: rgba(185, 167, 121, 0.55);
+    --sy-border-bronze: rgba(152, 133, 97, 0.5);
+    --sy-border-green: rgba(4, 38, 35, 0.45);
+    --sy-border-card: rgba(185, 167, 121, 0.2);
+    --sy-focus-ring: rgba(4, 38, 35, 0.12);
+    --sy-shadow-hard: 4px 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Dark — same identity, high-contrast on Basalt */
+html.dark {
+    --sy-primary: #042623;
+    --sy-primary-dark: #0a4a42;
+    --sy-on-primary: #ffffff;
+    --sy-primary-container: #0a4a42;
+    --sy-primary-dim: #0d5c4a;
+
+    --sy-cream: #131313;
+    --sy-paper: #131313;
+    --sy-white: #353534;
+    --sy-green: #eef8f5;
+    --sy-green-deep: #042623;
+    --sy-green-mid: #0a4a42;
+    --sy-green-soft: #2a2a2a;
+    --sy-green-pale: #201f1f;
+    --sy-green-zebra: #2a2a2a;
+    --sy-gold: #b9a779;
+    --sy-gold-soft: #4a4438;
+    --sy-gold-muted: #3d3830;
+    --sy-bronze: #c4b08a;
+    --sy-bronze-soft: #3a3630;
+    --sy-ink: #fafaf9;
+    --sy-gray: #f2f1ef;
+    --sy-muted: #e4e3e1;
+    --sy-accent: #ffffff;
+    --sy-forest: #042623;
+    --sy-charcoal: #161616;
+    --sy-umber: #3d3a3b;
+    --sy-border-subtle: rgba(255, 255, 255, 0.14);
+    --sy-border-strong: rgba(255, 255, 255, 0.32);
+    --sy-border-input: rgba(255, 255, 255, 0.28);
+    --sy-border-gold: rgba(185, 167, 121, 0.55);
+    --sy-border-bronze: rgba(196, 176, 138, 0.45);
+    --sy-border-green: rgba(212, 232, 226, 0.35);
+    --sy-border-card: rgba(185, 167, 121, 0.3);
+    --sy-focus-ring: rgba(185, 167, 121, 0.2);
+    --sy-shadow-hard: 4px 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+@font-face {
+    font-family: 'itf Qomra Arabic';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('/fonts/qomra/Qomra-Light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'itf Qomra Arabic';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/fonts/qomra/Qomra-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'itf Qomra Arabic';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('/fonts/qomra/Qomra-Medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'itf Qomra Arabic';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/fonts/qomra/Qomra-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'itf Qomra Arabic';
+    font-style: normal;
+    font-weight: 900;
+    font-display: swap;
+    src: url('/fonts/qomra/Qomra-Black.ttf') format('truetype');
+}
