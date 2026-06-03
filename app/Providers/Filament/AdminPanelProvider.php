@@ -2,17 +2,16 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Dashboard;
+use App\Filament\Widgets\IncomeByAreaChart;
+use App\Filament\Widgets\NeighborhoodStatsOverview;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use App\Filament\Pages\Dashboard;
-use App\Filament\Widgets\IncomeByAreaChart;
-use App\Filament\Widgets\NeighborhoodStatsOverview;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -29,24 +28,17 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#042623'),
+                'success' => Color::hex('#0d5c4a'),
+                'warning' => Color::hex('#988561'),
+                'gray' => Color::hex('#3d3a3b'),
             ])
-            ->font('Tahoma')
-            ->renderHook(
-                PanelsRenderHook::HEAD_END,
-                fn (): string => <<<'HTML'
-                <style>
-                    /* Offline Arabic font stack (system fonts, no external requests). */
-                    html, body, .fi-body, .fi-sidebar, .fi-topbar {
-                        font-family: "Segoe UI", "Tahoma", "Cairo", "Noto Naskh Arabic", "Arial", sans-serif !important;
-                    }
-                    /* Comfortable Arabic line height and prevent label/table clipping. */
-                    .fi-body { line-height: 1.7; }
-                    .fi-ta-text, .fi-in-text, th, td { word-break: normal; overflow-wrap: anywhere; }
-                </style>
-                HTML,
-            )
+            ->brandLogo(asset('images/brand/syrian-horizontal-dark-green.svg'))
+            ->darkModeBrandLogo(asset('images/brand/syrian-horizontal-white.svg'))
+            ->brandLogoHeight('2.5rem')
+            ->favicon(asset('images/favicon.svg'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([

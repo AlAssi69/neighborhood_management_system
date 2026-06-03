@@ -3,26 +3,95 @@
 <head>
     <meta charset="utf-8">
     <style>
-        body { font-family: sans-serif; direction: rtl; text-align: right; color: #1f2937; }
-        .header { text-align: center; border-bottom: 2px solid #b45309; padding-bottom: 8px; margin-bottom: 14px; }
-        .header h1 { margin: 0; font-size: 18px; color: #b45309; }
-        .header .subtitle { font-size: 12px; color: #6b7280; margin-top: 4px; }
-        .meta { font-size: 11px; color: #6b7280; margin-bottom: 12px; }
-        h2 { font-size: 14px; background: #fef3c7; padding: 6px 8px; margin: 16px 0 6px; border-right: 4px solid #f59e0b; }
+        body {
+            font-family: dejavusans, sans-serif;
+            direction: rtl;
+            text-align: right;
+            color: #161616;
+            font-size: 12px;
+        }
+        .letterhead {
+            text-align: center;
+            border-bottom: 2px solid #b9a779;
+            padding-bottom: 12px;
+            margin-bottom: 14px;
+        }
+        .letterhead img {
+            max-width: 320px;
+            height: auto;
+            margin-bottom: 8px;
+        }
+        .letterhead .line-republic {
+            font-family: dejavusans, sans-serif;
+            font-weight: bold;
+            font-size: 18px;
+            color: #042623;
+            margin: 4px 0;
+        }
+        .letterhead .line-ministry {
+            font-family: dejavusans, sans-serif;
+            font-size: 14px;
+            color: #042623;
+            margin: 2px 0;
+        }
+        .letterhead .line-neighborhood {
+            font-size: 13px;
+            color: #3d3a3b;
+            margin-top: 6px;
+        }
+        .letterhead .subtitle {
+            font-size: 12px;
+            color: #988561;
+            margin-top: 8px;
+        }
+        .meta {
+            font-size: 11px;
+            color: #3d3a3b;
+            margin-bottom: 12px;
+        }
+        h2 {
+            font-family: dejavusans, sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            background: #ecf4f1;
+            padding: 6px 8px;
+            margin: 16px 0 6px;
+            border-right: 4px solid #b9a779;
+            color: #042623;
+        }
         table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        table.info td { padding: 6px 8px; border: 1px solid #e5e7eb; }
-        table.info td.label { background: #f9fafb; font-weight: bold; width: 28%; }
-        table.grid th, table.grid td { padding: 6px 8px; border: 1px solid #e5e7eb; font-size: 11px; }
-        table.grid th { background: #f3f4f6; }
-        .empty { color: #9ca3af; font-size: 11px; padding: 6px; }
+        table.info td { padding: 6px 8px; border: 1px solid rgba(185, 167, 121, 0.35); }
+        table.info td.label {
+            background: #f3ede0;
+            font-weight: bold;
+            width: 28%;
+            color: #042623;
+        }
+        table.grid th, table.grid td {
+            padding: 6px 8px;
+            border: 1px solid rgba(185, 167, 121, 0.35);
+            font-size: 11px;
+        }
+        table.grid th {
+            background: #d4e8e2;
+            color: #042623;
+            border-bottom: 2px solid #b9a779;
+        }
+        table.grid tbody tr:nth-child(even) {
+            background: #e8f2ef;
+        }
+        .empty { color: #988561; font-size: 11px; padding: 6px; }
         .signature { margin-top: 40px; font-size: 12px; }
         .signature .box { display: inline-block; width: 45%; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>{{ $neighborhoodName }}</h1>
-        <div class="subtitle">نموذج بيانات رسمي للمواطن</div>
+    <div class="letterhead">
+        <img src="{{ public_path('images/brand/syrian-horizontal-dark-green.svg') }}" alt="">
+        <p class="line-republic">الجمهورية العربية السورية</p>
+        <p class="line-ministry">نظام إدارة معلومات الحي</p>
+        <p class="line-neighborhood">{{ $neighborhoodName }}</p>
+        <p class="subtitle">نموذج بيانات رسمي للمواطن</p>
     </div>
 
     <div class="meta">

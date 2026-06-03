@@ -1,0 +1,381 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+@import './syrian-tokens.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+@source '../../../../resources/views/**/*.blade.php';
+@source '../../../../vendor/filament/**/*.blade.php';
+
+/*
+ * Levantine Executive (light) + Imperial Heritage (dark)
+ * Syrian visual identity — docs/design/DESIGN.md, docs/design/DESIGN-dark.md
+ */
+
+@theme {
+    --font-qomra: 'itf Qomra Arabic', Cairo, ui-sans-serif, sans-serif;
+    --font-sans: Cairo, 'Segoe UI', Tahoma, 'Noto Naskh Arabic', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+    --color-sy-primary: var(--sy-primary);
+    --color-sy-on-primary: var(--sy-on-primary);
+    --color-sy-cream: var(--sy-cream);
+    --color-sy-paper: var(--sy-paper);
+    --color-sy-white: var(--sy-white);
+    --color-sy-green: var(--sy-green);
+    --color-sy-green-deep: var(--sy-green-deep);
+    --color-sy-green-mid: var(--sy-green-mid);
+    --color-sy-green-soft: var(--sy-green-soft);
+    --color-sy-green-pale: var(--sy-green-pale);
+    --color-sy-green-zebra: var(--sy-green-zebra);
+    --color-sy-gold: var(--sy-gold);
+    --color-sy-gold-soft: var(--sy-gold-soft);
+    --color-sy-gold-muted: var(--sy-gold-muted);
+    --color-sy-bronze: var(--sy-bronze);
+    --color-sy-bronze-soft: var(--sy-bronze-soft);
+    --color-sy-ink: var(--sy-ink);
+    --color-sy-gray: var(--sy-gray);
+    --color-sy-muted: var(--sy-muted);
+    --color-sy-accent: var(--sy-accent);
+    --color-sy-forest: var(--sy-forest);
+    --color-sy-charcoal: var(--sy-charcoal);
+    --color-sy-umber: var(--sy-umber);
+    --color-sy-border-subtle: var(--sy-border-subtle);
+    --color-sy-border-strong: var(--sy-border-strong);
+    --color-sy-border-input: var(--sy-border-input);
+    --color-sy-border-gold: var(--sy-border-gold);
+    --color-sy-border-bronze: var(--sy-border-bronze);
+    --color-sy-border-green: var(--sy-border-green);
+    --color-sy-border-card: var(--sy-border-card);
+
+    --radius-sm: 0.125rem;
+    --radius-DEFAULT: 0.25rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
+
+    --max-width-content: 1440px;
+}
+
+/* --- Typography --- */
+.fi-body {
+    @apply font-sans;
+    line-height: 1.7;
+}
+
+.fi-header-heading,
+.fi-section-header-heading {
+    font-family: var(--font-qomra);
+    font-weight: 900;
+}
+
+.fi-ta-text,
+.fi-in-text,
+th,
+td {
+    word-break: normal;
+    overflow-wrap: anywhere;
+}
+
+.sy-label-mono {
+    @apply text-xs font-medium uppercase tracking-wider;
+}
+
+html.dark .sy-label-mono {
+    font-family: var(--font-mono);
+    letter-spacing: 0.08em;
+}
+
+@layer components {
+    .sy-accent-bar {
+        @apply border-s-4 border-sy-gold;
+    }
+
+    .sy-toolbar-band {
+        @apply rounded-xl border border-sy-border-card bg-sy-green-pale p-4;
+    }
+
+    .sy-table-head {
+        @apply bg-sy-green-soft font-bold text-sy-green;
+        border-bottom: 2px solid var(--sy-border-gold);
+    }
+
+    .sy-letterhead {
+        @apply text-center;
+    }
+
+    .sy-letterhead--top {
+        @apply mb-6 border-b border-sy-border-gold pb-5;
+    }
+
+    .sy-letterhead--footer {
+        @apply mt-8 border-t border-sy-border-gold pt-5;
+    }
+
+    .sy-letterhead__line {
+        @apply m-0 text-sy-ink;
+        font-family: var(--font-qomra);
+        font-weight: 900;
+        line-height: 1.35;
+    }
+
+    .sy-letterhead__line--republic {
+        @apply mb-1 text-2xl text-sy-green-deep;
+    }
+
+    .sy-letterhead__line--ministry {
+        @apply mb-0.5 text-lg text-sy-green-deep;
+    }
+
+    .sy-letterhead__line--directorate {
+        @apply mt-1 text-lg text-sy-green-deep;
+    }
+
+    .sy-data-table thead tr {
+        @apply bg-sy-green-soft font-bold text-sy-green;
+        border-bottom: 2px solid var(--sy-border-gold);
+    }
+
+    .sy-data-table tbody tr:nth-child(even) {
+        @apply bg-sy-green-zebra;
+    }
+
+    .sy-data-table tbody tr:hover {
+        @apply bg-sy-green-soft;
+    }
+
+    .sy-data-table td,
+    .sy-data-table th {
+        @apply px-2 py-2;
+    }
+
+    .sy-data-table tfoot tr,
+    .sy-data-table .sy-table-total-row {
+        @apply border-t-2 border-sy-border-gold bg-sy-gold-soft font-bold text-sy-green-deep;
+    }
+}
+
+/* --- Light: Filament panel shell --- */
+html:not(.dark) .fi-body {
+    @apply bg-sy-cream text-sy-ink;
+}
+
+html:not(.dark) .fi-main {
+    @apply bg-sy-cream;
+}
+
+html:not(.dark) .fi-topbar nav {
+    @apply border-b-[3px] border-sy-gold bg-sy-white;
+    box-shadow: none;
+    --tw-ring-shadow: none;
+}
+
+html:not(.dark) .fi-sidebar {
+    @apply border-e border-sy-border-strong bg-sy-green-pale;
+    --tw-ring-shadow: none;
+}
+
+html:not(.dark) .fi-sidebar-header {
+    @apply border-b border-sy-border-green bg-sy-green-soft;
+}
+
+html:not(.dark) .fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn {
+    @apply rounded-lg bg-sy-white ring-1 ring-[var(--sy-border-card)];
+}
+
+html:not(.dark) .fi-section-header {
+    @apply border-b border-sy-gold-muted;
+}
+
+html:not(.dark) .fi-section-header-heading {
+    @apply text-sy-green-deep;
+}
+
+html:not(.dark) .fi-section-header-icon {
+    @apply text-sy-gold;
+}
+
+html:not(.dark) .fi-sidebar-item-button {
+    @apply relative font-medium text-sy-gray hover:bg-sy-green-soft hover:text-sy-green-deep;
+}
+
+html:not(.dark) .fi-sidebar-item-button.fi-active,
+html:not(.dark) .fi-sidebar-item.fi-active .fi-sidebar-item-button {
+    @apply bg-sy-green text-sy-on-primary shadow-sm;
+    border-inline-start: 4px solid var(--sy-gold);
+}
+
+html:not(.dark) .fi-sidebar-item.fi-active .fi-sidebar-item-icon,
+html:not(.dark) .fi-sidebar-item-button.fi-active .fi-sidebar-item-icon {
+    @apply text-sy-gold;
+}
+
+html:not(.dark) .fi-sidebar-item.fi-active .fi-sidebar-item-label {
+    @apply text-sy-on-primary;
+}
+
+html:not(.dark) .fi-topbar-item-button {
+    @apply text-sy-gray hover:text-sy-green-deep;
+}
+
+html:not(.dark) .fi-topbar-open-sidebar-btn {
+    @apply text-sy-gray hover:text-sy-green-deep;
+}
+
+html:not(.dark) .fi-topbar-open-sidebar-btn:hover {
+    @apply bg-sy-green-soft;
+}
+
+html:not(.dark) .fi-header-heading {
+    @apply text-sy-green-deep;
+}
+
+html:not(.dark) .fi-header-subheading {
+    @apply text-sy-muted;
+}
+
+html:not(.dark) .fi-btn-color-primary {
+    @apply focus:ring-4 focus:ring-[var(--sy-focus-ring)];
+}
+
+/* --- Dark: Imperial Heritage --- */
+html.dark .fi-body {
+    @apply bg-sy-cream text-sy-ink;
+}
+
+html.dark .fi-main {
+    @apply bg-sy-cream text-sy-ink;
+}
+
+html.dark .fi-topbar nav {
+    @apply border-b-2 border-sy-gold bg-sy-forest;
+    box-shadow: none;
+    --tw-ring-shadow: none;
+}
+
+html.dark .fi-sidebar {
+    @apply border-e-2 border-sy-gold bg-sy-forest;
+    --tw-ring-shadow: none;
+}
+
+html.dark .fi-sidebar-header {
+    @apply border-b border-sy-border-gold bg-sy-green-deep;
+}
+
+html.dark .fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn {
+    @apply rounded-lg bg-sy-green-pale ring-1 ring-[var(--sy-border-strong)];
+}
+
+html.dark .fi-section-header {
+    @apply border-b border-sy-border-gold;
+}
+
+html.dark .fi-section-header-heading {
+    @apply text-sy-accent;
+}
+
+html.dark .fi-section-header-icon {
+    @apply text-sy-gold;
+}
+
+html.dark .fi-sidebar-item-button {
+    @apply relative font-medium text-sy-gray hover:bg-sy-green-soft hover:text-sy-accent;
+}
+
+html.dark .fi-sidebar-item-button.fi-active,
+html.dark .fi-sidebar-item.fi-active .fi-sidebar-item-button {
+    @apply bg-sy-green-deep text-sy-accent;
+    box-shadow: inset 0 -4px 0 0 var(--sy-gold);
+}
+
+html.dark .fi-sidebar-item.fi-active .fi-sidebar-item-icon,
+html.dark .fi-sidebar-item-button.fi-active .fi-sidebar-item-icon {
+    @apply text-sy-gold;
+}
+
+html.dark .fi-sidebar-item.fi-active .fi-sidebar-item-label {
+    @apply text-sy-accent;
+}
+
+html.dark .fi-topbar-item-button {
+    @apply text-sy-gray hover:text-sy-gold;
+}
+
+html.dark .fi-topbar-open-sidebar-btn {
+    @apply text-sy-gray hover:text-sy-gold;
+}
+
+html.dark .fi-topbar-open-sidebar-btn:hover {
+    @apply bg-sy-green-deep;
+}
+
+html.dark .fi-header-heading {
+    @apply text-sy-accent;
+}
+
+html.dark .fi-header-subheading {
+    @apply text-sy-gray;
+}
+
+html.dark .fi-btn-color-primary {
+    --tw-bg-opacity: 1;
+    background-color: var(--sy-green-deep) !important;
+    color: var(--sy-accent) !important;
+}
+
+html.dark .fi-btn-color-primary:hover {
+    background-color: var(--sy-green-mid) !important;
+}
+
+html.dark .fi-btn-color-primary:focus {
+    @apply ring-4 ring-[var(--sy-focus-ring)];
+}
+
+html.dark .fi-input-wrp {
+    @apply rounded-none border-0 border-b-2 border-sy-gray bg-sy-charcoal;
+}
+
+html.dark .fi-input-wrp:focus-within {
+    @apply border-sy-gold;
+}
+
+html.dark .fi-dropdown-panel,
+html.dark .fi-modal-window {
+    box-shadow: var(--sy-shadow-hard);
+}
+
+html.dark .sy-letterhead__line--republic,
+html.dark .sy-letterhead__line--ministry,
+html.dark .sy-letterhead__line--directorate {
+    @apply text-sy-green;
+}
+
+html.dark .sy-data-table tfoot tr,
+html.dark .sy-data-table .sy-table-total-row {
+    @apply text-sy-accent;
+}
+
+html.dark .fi-section-content .text-3xl.font-semibold {
+    color: var(--sy-accent);
+}
+
+html.dark .fi-section-content,
+html.dark .fi-field-wrp-label,
+html.dark .fi-input,
+html.dark .fi-ta-text {
+    @apply text-sy-ink;
+}
+
+html.dark .fi-ta-header-description {
+    @apply text-sy-gray;
+}
+
+html.dark .fi-ta-header-cell,
+html.dark .fi-ta-cell,
+html.dark .fi-fo-field-wrp-label,
+html.dark .fi-fo-placeholder {
+    @apply text-sy-ink;
+}
+
+html.dark .fi-wi-stats-overview-stat-label {
+    @apply text-sy-gray;
+}
