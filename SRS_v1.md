@@ -18,7 +18,7 @@
 
 ## 3. Data Dictionary & Core Entities
 
-* **Person:** National ID (Primary Key), First Name, Father's Name, Last Name, Phone Number, Income Data.
+* **Person:** National ID (Primary Key), First Name, Father's Name, Last Name, Phone Number.
 * **Family:** Family Card Number (Primary Key), Head of Household ID, Total Member Count.
 * **Property (Real Estate):** Property Number, Real Estate Area, Main Area, Detailed Address, Floor Number.
 * **Address Hierarchy:** Location ID, Location Name, Parent Location ID (allowing for infinite nesting of areas).
@@ -38,7 +38,7 @@
 ### 4.2. Relationship Mapping Module
 
 * Link individuals to a distinct Family unit using the Family Card Number.
-* Associate a Person with one or more Properties to define residence or ownership status.
+* Associate a Person with one or more Properties with legal status: owner, tenant, or vacant (فروغ).
 * Connect a Person to specific Businesses via the Commercial Register.
 * Maintain referential integrity when entities are deleted (e.g., unlinking a person from a property if the property record is removed).
 
@@ -46,12 +46,12 @@
 
 * Execute exact and partial text searches on names, IDs, and phone numbers.
 * Filter resident populations by specific geographic areas, real estate zones, or property numbers.
-* Apply compound filters, such as searching for families with more than five members within a specific income bracket.
+* Apply compound filters, such as searching for families with more than five members in a given area.
 
 ### 4.4. Dashboard and Statistical Reporting
 
 * Aggregate real-time neighborhood data to display total population, family count, and active businesses.
-* Generate income-based statistics grouped by geographic area or real estate zone.
+* Generate population statistics grouped by real estate zone.
 * Export raw statistical data for external reporting.
 
 ### 4.5. Document Archiving and PDF Export

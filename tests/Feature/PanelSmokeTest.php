@@ -43,7 +43,6 @@ class PanelSmokeTest extends TestCase
             'first_name' => 'محمد',
             'last_name' => 'علي',
             'family_id' => $family->id,
-            'income' => 1500,
         ]);
         $family->update(['head_person_id' => $person->id]);
         $person->properties()->attach($property->id, ['relation_type' => 'owner']);
@@ -78,12 +77,8 @@ class PanelSmokeTest extends TestCase
         $this->actingAs($this->admin());
         $this->seedMinimal();
 
-        // The seeded person has income 1500 and a family of 3 members.
         Livewire::test(ListPeople::class)
             ->assertCanSeeTableRecords(Person::all())
-            ->filterTable('income_bracket', ['income_from' => 2000, 'income_to' => 5000])
-            ->assertCanNotSeeTableRecords(Person::all())
-            ->resetTableFilters()
             ->filterTable('min_family_members', ['min_members' => 2])
             ->assertCanSeeTableRecords(Person::all())
             ->resetTableFilters()

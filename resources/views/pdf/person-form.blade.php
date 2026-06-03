@@ -31,10 +31,6 @@
             <td class="sy-label">رقم الهاتف</td>
             <td>{{ $person->phone ?: '—' }}</td>
         </tr>
-        <tr>
-            <td class="sy-label">الدخل</td>
-            <td>{{ $person->income !== null ? number_format((float) $person->income, 2) . ' ₪' : '—' }}</td>
-        </tr>
     </table>
 
     <h2 class="sy-pdf-section-title">البيانات العائلية</h2>
@@ -61,7 +57,7 @@
                     <th>رقم العقار</th>
                     <th>المنطقة العقارية</th>
                     <th>عنوان السكن</th>
-                    <th>نوع العلاقة</th>
+                    <th>الوضع القانوني</th>
                 </tr>
             </thead>
             <tbody>
@@ -70,7 +66,7 @@
                         <td>{{ $property->property_number }}</td>
                         <td>{{ $property->realEstateArea?->name ?: '—' }}</td>
                         <td>{{ $property->full_residential_address ?: '—' }}</td>
-                        <td>{{ $property->pivot->relation_type === 'owner' ? 'مالك' : 'ساكن' }}</td>
+                        <td>{{ \App\Support\PropertyRelationType::labelFor($property->pivot->relation_type) }}</td>
                     </tr>
                 @endforeach
             </tbody>

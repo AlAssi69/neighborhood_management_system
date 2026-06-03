@@ -2,7 +2,6 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Widgets\IncomeByAreaChart;
 use App\Filament\Widgets\NeighborhoodStatsOverview;
 use App\Models\Person;
 use Filament\Actions\Action;
@@ -20,7 +19,6 @@ class Dashboard extends BaseDashboard
     {
         return [
             NeighborhoodStatsOverview::class,
-            IncomeByAreaChart::class,
         ];
     }
 
@@ -40,7 +38,7 @@ class Dashboard extends BaseDashboard
     }
 
     /**
-     * Export raw income statistics grouped by real-estate area as CSV.
+     * Export population counts grouped by real-estate area as CSV.
      */
     protected function exportStats(): StreamedResponse
     {
@@ -61,11 +59,10 @@ class Dashboard extends BaseDashboard
 
                     foreach ($areas as $area) {
                         if (! isset($rows[$area])) {
-                            $rows[$area] = ['population' => 0, 'income' => 0.0];
+                            $rows[$area] = 0;
                         }
 
-                        $rows[$area]['population']++;
-                        $rows[$area]['income'] += (float) $person->income;
+                        $rows[$area]++;
                     }
                 }
             });
@@ -78,16 +75,12 @@ class Dashboard extends BaseDashboard
             // UTF-8 BOM so Excel renders Arabic correctly.
             fwrite($handle, "\xEF\xBB\xBF");
 
-            fputcsv($handle, ['المنطقة العقارية', 'عدد السكان', 'إجمالي الدخل', 'متوسط الدخل']);
+            fputcsv($handle, ['المنطقة العقارية', 'عدد السكان']);
 
-            foreach ($rows as $area => $data) {
-                $average = $data['population'] > 0 ? $data['income'] / $data['population'] : 0;
-
+            foreach ($rows as $area => $population) {
                 fputcsv($handle, [
                     $area,
-                    $data['population'],
-                    number_format($data['income'], 2, '.', ''),
-                    number_format($average, 2, '.', ''),
+                    $population,
                 ]);
             }
 

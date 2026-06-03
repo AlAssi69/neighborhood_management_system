@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\People\RelationManagers;
 
+use App\Support\PropertyRelationType;
 use Filament\Actions\AttachAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DetachAction;
@@ -17,24 +18,16 @@ class PropertiesRelationManager extends RelationManager
 {
     protected static string $relationship = 'properties';
 
-    protected static ?string $title = 'العقارات (سكن / ملكية)';
-
-    /**
-     * @var array<string, string>
-     */
-    protected static array $relationTypes = [
-        'resident' => 'ساكن',
-        'owner' => 'مالك',
-    ];
+    protected static ?string $title = 'العقارات (الوضع القانوني)';
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 Select::make('relation_type')
-                    ->label('نوع العلاقة')
-                    ->options(static::$relationTypes)
-                    ->default('resident')
+                    ->label('الوضع القانوني')
+                    ->options(PropertyRelationType::options())
+                    ->default(PropertyRelationType::Tenant->value)
                     ->required(),
             ]);
     }
@@ -56,9 +49,9 @@ class PropertiesRelationManager extends RelationManager
                     ->wrap()
                     ->placeholder('—'),
                 TextColumn::make('pivot.relation_type')
-                    ->label('نوع العلاقة')
+                    ->label('الوضع القانوني')
                     ->badge()
-                    ->formatStateUsing(fn (?string $state): string => static::$relationTypes[$state] ?? (string) $state),
+                    ->formatStateUsing(fn (?string $state): string => PropertyRelationType::labelFor($state)),
             ])
             ->headerActions([
                 AttachAction::make()
@@ -67,9 +60,9 @@ class PropertiesRelationManager extends RelationManager
                     ->schema(fn (AttachAction $action): array => [
                         $action->getRecordSelect()->label('العقار'),
                         Select::make('relation_type')
-                            ->label('نوع العلاقة')
-                            ->options(static::$relationTypes)
-                            ->default('resident')
+                            ->label('الوضع القانوني')
+                            ->options(PropertyRelationType::options())
+                            ->default(PropertyRelationType::Tenant->value)
                             ->required(),
                     ]),
             ])

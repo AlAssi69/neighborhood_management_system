@@ -46,12 +46,6 @@ class PersonForm
                             ->label('الكنية')
                             ->required()
                             ->maxLength(255),
-
-                        TextInput::make('income')
-                            ->label('الدخل')
-                            ->numeric()
-                            ->minValue(0)
-                            ->prefix('₪'),
                     ]),
 
                 Section::make('الانتماء العائلي')

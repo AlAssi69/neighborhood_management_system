@@ -44,8 +44,8 @@
 1. **Locations** — Build the area tree (parent regions, then sub-areas).
 2. **Properties** — Register each property with its location and real-estate area label.
 3. **Families** — Create family records (family card number, optional head of family).
-4. **People** — Add persons; assign family, income, phone, national ID.
-5. **Relations** — On a person’s edit page, attach properties (resident/owner), businesses, and documents.
+4. **People** — Add persons; assign family, phone, national ID.
+5. **Relations** — On a person’s edit page, attach properties (owner / tenant / vacant), businesses, and documents.
 6. **Export** — Generate the official PDF or dashboard CSV when needed.
 
 **العربية:**
@@ -61,7 +61,7 @@
 
 ## Locations / المناطق
 
-**English:** **المناطق (العناوين)** supports unlimited nesting via a parent location. Create top-level areas first, then child areas. This tree is **منطقة السكن** on each property. Add **buildings** and **floors** per location under **المباني** or from the location edit page. **المناطق العقارية** is a separate lookup used for real-estate registry and income statistics.
+**English:** **المناطق (العناوين)** supports unlimited nesting via a parent location. Create top-level areas first, then child areas. This tree is **منطقة السكن** on each property. Add **buildings** and **floors** per location under **المباني** or from the location edit page. **المناطق العقارية** is a separate lookup used for real-estate registry and population statistics.
 
 **العربية:** الشجرة = **منطقة السكن**. أضف **المباني** و**الطوابق** لكل منطقة قبل تعبئة العقارات. **المنطقة العقارية** قائمة مستقلة عن شجرة السكن.
 
@@ -70,14 +70,14 @@
 **English:**
 
 - **العائلات (Families):** `family_card_number`, optional **head of family** (`head_person_id`). Use the **Members** relation tab to manage people in the family.
-- **الأشخاص (People):** `national_id`, `first_name`, `father_name`, `last_name`, `phone`, `income`, link to **family**.
+- **الأشخاص (People):** `national_id`, `first_name`, `father_name`, `last_name`, `phone`, link to **family**.
 
 When editing a family, assign a head person from members. When a head person is deleted, the family head reference is cleared automatically.
 
 **العربية:**
 
 - **العائلات:** رقم بطاقة عائلية، رب عائلة اختياري، تبويب **الأعضاء**.
-- **الأشخاص:** رقم وطني، أسماء، هاتف، دخل، عائلة.
+- **الأشخاص:** رقم وطني، أسماء، هاتف، عائلة.
 
 ## Properties and businesses / العقارات والمحال
 
@@ -97,22 +97,20 @@ When editing a family, assign a head person from members. When a head person is 
 
 | Tab | Purpose |
 |-----|---------|
-| Properties | Attach properties with **relation type** (resident / owner) via `person_property` pivot |
+| Properties | Attach properties with **legal status** (owner / tenant / vacant) via `person_property` pivot |
 | Businesses | Shops owned by this person |
 | Documents | Upload archived files (title, type, file) |
 
 You can also link a person to a property from the property side when editing residents.
 
-**العربية:** من تعديل الشخص: تبويب **العقارات** (ساكن/مالك)، **المحال**، **المستندات**. يمكن ربط السكان من صفحة العقار أيضاً.
+**العربية:** من تعديل الشخص: تبويب **العقارات** (مالك / مستأجر / فروغ)، **المحال**، **المستندات**.
 
 ## Search and filters / البحث والفلاتر
 
 **English:**
 
 - **Global search** (top bar): searches people by national ID, first/father/last name, and phone.
-- **List filters:** On **الأشخاص** and other list pages, use the filter icon to narrow rows (e.g. by family, location, income range — as configured on each table).
-
-Use filters together to answer questions like “all persons in a given area with income above X.”
+- **List filters:** On **الأشخاص** and other list pages, use the filter icon to narrow rows (e.g. by family, location, property number — as configured on each table).
 
 **العربية:**
 
@@ -124,11 +122,10 @@ Use filters together to answer questions like “all persons in a given area wit
 **English:** **لوحة المعلومات** (home) shows:
 
 - Overview widgets: neighborhood statistics (`NeighborhoodStatsOverview`)
-- Chart: income by real-estate area (`IncomeByAreaChart`)
 
-Header action **تصدير الإحصائيات (CSV)** downloads a UTF-8 CSV (with BOM for Excel) grouping population and income by **real estate area** on linked properties.
+Header action **تصدير الإحصائيات (CSV)** downloads a UTF-8 CSV (with BOM for Excel) grouping **population** by **real estate area** on linked properties.
 
-**العربية:** الصفحة الرئيسية تعرض إحصائيات ومخطط الدخل حسب المنطقة العقارية. زر **تصدير الإحصائيات (CSV)** يحمّل ملفاً يفتح في Excel بالعربية بشكل صحيح (BOM UTF-8).
+**العربية:** الصفحة الرئيسية تعرض إحصائيات عامة. زر **تصدير الإحصائيات (CSV)** يحمّل ملفاً بعدد السكان حسب المنطقة العقارية (BOM UTF-8 لـ Excel).
 
 ## Official PDF export / تصدير النموذج الرسمي PDF
 

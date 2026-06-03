@@ -74,12 +74,6 @@ class PeopleTable
                     ->searchable()
                     ->toggleable(),
 
-                TextColumn::make('income')
-                    ->label('الدخل')
-                    ->money('ILS')
-                    ->sortable()
-                    ->toggleable(),
-
                 TextColumn::make('properties_count')
                     ->label('العقارات')
                     ->counts('properties')
@@ -143,35 +137,6 @@ class PeopleTable
                     ->indicateUsing(fn (array $data): ?string => filled($data['property_number'] ?? null)
                         ? 'رقم العقار: '.$data['property_number']
                         : null),
-
-                Filter::make('income_bracket')
-                    ->label('شريحة الدخل')
-                    ->schema([
-                        TextInput::make('income_from')
-                            ->label('الدخل من')
-                            ->numeric(),
-                        TextInput::make('income_to')
-                            ->label('الدخل إلى')
-                            ->numeric(),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(filled($data['income_from'] ?? null), fn (Builder $q) => $q->where('income', '>=', $data['income_from']))
-                            ->when(filled($data['income_to'] ?? null), fn (Builder $q) => $q->where('income', '<=', $data['income_to']));
-                    })
-                    ->indicateUsing(function (array $data): array {
-                        $indicators = [];
-
-                        if (filled($data['income_from'] ?? null)) {
-                            $indicators[] = 'الدخل من: '.$data['income_from'];
-                        }
-
-                        if (filled($data['income_to'] ?? null)) {
-                            $indicators[] = 'الدخل إلى: '.$data['income_to'];
-                        }
-
-                        return $indicators;
-                    }),
 
                 Filter::make('min_family_members')
                     ->label('حجم العائلة')

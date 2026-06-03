@@ -96,16 +96,20 @@ class NeighborhoodSeeder extends Seeder
                     'father_name' => $firstNames[($personIndex + 3) % count($firstNames)],
                     'last_name' => $lastNames[$f % count($lastNames)],
                     'phone' => '059'.str_pad((string) ($personIndex * 137 % 10000000), 7, '0', STR_PAD_LEFT),
-                    'income' => 800 + (($personIndex * 173) % 4200),
                     'family_id' => $family->id,
                 ]);
 
                 $members[] = $person;
 
-                // Link each person to a property as resident (head is owner).
+                // Link each person to a property (head is owner; others tenant or vacant).
                 $property = $properties[($personIndex - 1) % count($properties)];
+                $relationType = match (true) {
+                    $m === 0 => 'owner',
+                    $m === 1 && $f % 3 === 0 => 'vacant',
+                    default => 'tenant',
+                };
                 $person->properties()->attach($property->id, [
-                    'relation_type' => $m === 0 ? 'owner' : 'resident',
+                    'relation_type' => $relationType,
                 ]);
             }
 

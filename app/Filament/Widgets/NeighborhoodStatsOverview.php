@@ -15,8 +15,6 @@ class NeighborhoodStatsOverview extends StatsOverviewWidget
 
     protected function getStats(): array
     {
-        $averageIncome = (float) Person::query()->whereNotNull('income')->avg('income');
-
         return [
             Stat::make('إجمالي السكان', Person::query()->count())
                 ->description('عدد الأشخاص المسجلين')
@@ -34,7 +32,7 @@ class NeighborhoodStatsOverview extends StatsOverviewWidget
                 ->color('success'),
 
             Stat::make('العقارات', Property::query()->count())
-                ->description('متوسط الدخل: '.number_format($averageIncome, 0).' ₪')
+                ->description('العقارات المسجّلة في النظام')
                 ->descriptionIcon('heroicon-o-home-modern')
                 ->color('warning'),
         ];

@@ -15,12 +15,7 @@ class Person extends Model
         'father_name',
         'last_name',
         'phone',
-        'income',
         'family_id',
-    ];
-
-    protected $casts = [
-        'income' => 'decimal:2',
     ];
 
     protected static function booted(): void

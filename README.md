@@ -27,27 +27,27 @@ Original functional requirements (Arabic): [req.txt](req.txt).
 
 **English:**
 
-- Person records (national ID, name parts, phone, income, family link)
+- Person records (national ID, name parts, phone, family link)
 - Family records (family card number, head of family, members)
-- Properties linked to hierarchical locations and to persons (resident/owner)
+- Properties linked to hierarchical locations and to persons (owner / tenant / vacant legal status)
 - Commercial businesses linked to properties and owners
 - Nested locations (unlimited parent/child areas)
 - Archived documents per person (filesystem storage, path-only in DB)
 - Arabic RTL Filament admin panel with CRUD, filters, and global search
-- Dashboard: population/income statistics and income-by-area chart
-- CSV export of income statistics from the dashboard
+- Dashboard: population statistics overview
+- CSV export of population by real-estate area from the dashboard
 - Official person form as print-ready Arabic PDF (mPDF)
 
 **العربية:**
 
-- سجلات الأشخاص (رقم وطني، اسم، هاتف، دخل، ربط بالعائلة)
+- سجلات الأشخاص (رقم وطني، اسم، هاتف، ربط بالعائلة)
 - سجلات العائلات (رقم بطاقة عائلية، رب الأسرة، الأعضاء)
-- العقارات مرتبطة بمناطق هرمية وبأشخاص (ساكن/مالك)
+- العقارات مرتبطة بمناطق هرمية وبأشخاص (مالك / مستأجر / فروغ)
 - المحال التجارية مرتبطة بالعقارات والمالكين
 - مناطق متداخلة (هرمية غير محدودة)
 - أرشفة مستندات لكل شخص (ملفات على القرص، المسار فقط في قاعدة البيانات)
 - لوحة إدارة Filament عربية RTL مع CRUD وفلاتر وبحث عام
-- لوحة معلومات: إحصائيات سكانية/دخل ومخطط دخل حسب المنطقة
+- لوحة معلومات: إحصائيات سكانية وتصدير CSV حسب المنطقة العقارية
 - تصدير إحصائيات الدخل بصيغة CSV
 - نموذج رسمي للشخص كـ PDF عربي جاهز للطباعة
 
@@ -128,7 +128,7 @@ php artisan serve
 app/
   Models/                    # Person, Family, Property, Location, Business, ArchivedDocument
   Filament/Resources/        # CRUD per entity; relation managers on Person & Family
-  Filament/Widgets/          # NeighborhoodStatsOverview, IncomeByAreaChart
+  Filament/Widgets/          # NeighborhoodStatsOverview
   Filament/Pages/            # Dashboard (CSV export)
   Services/PdfService.php    # mPDF HTML → PDF bytes
   Providers/Filament/        # AdminPanelProvider (path: /admin)
@@ -166,7 +166,7 @@ erDiagram
   Person ||--o{ ArchivedDocument : archives
 ```
 
-**English:** `Person` belongs to `Family`; links to `Property` via `person_property` pivot (`relation_type`: resident or owner); owns `Business` records and `ArchivedDocument` files. `Property` belongs to `Location`. `Location` nests via `parent_id`.
+**English:** `Person` belongs to `Family`; links to `Property` via `person_property` pivot (`relation_type`: owner, tenant, or vacant); owns `Business` records and `ArchivedDocument` files. `Property` belongs to `Location`. `Location` nests via `parent_id`.
 
 **العربية:** `Person` ينتمي إلى `Family`؛ يرتبط بـ `Property` عبر جدول وسيط `person_property` (نوع العلاقة: ساكن أو مالك)؛ يملك `Business` و`ArchivedDocument`. `Property` تنتمي إلى `Location`. `Location` هرمية عبر `parent_id`.
 

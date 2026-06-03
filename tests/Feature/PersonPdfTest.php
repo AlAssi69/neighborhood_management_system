@@ -67,7 +67,6 @@ class PersonPdfTest extends TestCase
             'father_name' => 'أحمد',
             'last_name' => 'العلي',
             'phone' => '0590000000',
-            'income' => 2500,
             'family_id' => $family->id,
         ]);
         $person->properties()->attach($property->id, ['relation_type' => 'owner']);
@@ -89,5 +88,6 @@ class PersonPdfTest extends TestCase
         // mPDF embeds custom font subsets (internal names use MPDFAA+ prefix).
         $this->assertStringContainsString('Cairo', $bytes);
         $this->assertStringContainsString('Qomra', $bytes);
+        $this->assertStringNotContainsString('الدخل', $bytes);
     }
 }
