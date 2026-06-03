@@ -14,6 +14,35 @@ class PersonPdfTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_bundled_pdf_fonts_are_present(): void
+    {
+        $cairo = config('pdf.cairo');
+        $qomra = config('pdf.qomra');
+
+        $this->assertFileExists($cairo['dir'].'/'.$cairo['regular']);
+        $this->assertFileExists($cairo['dir'].'/'.$cairo['bold']);
+        $this->assertFileExists($qomra['dir'].'/'.$qomra['regular']);
+        $this->assertFileExists($qomra['dir'].'/'.$qomra['bold']);
+    }
+
+    public function test_cairo_pdf_font_includes_digits_and_arabic_glyphs(): void
+    {
+        $cairoRegular = config('pdf.cairo.dir').'/'.config('pdf.cairo.regular');
+
+        $this->assertFileExists($cairoRegular);
+
+        // Merged cairo (arabic + latin subsets) is larger than arabic-only (~41 KiB).
+        $this->assertGreaterThan(60_000, filesize($cairoRegular));
+    }
+
+    public function test_pdf_service_exposes_brand_font_families(): void
+    {
+        $data = app(PdfService::class)->pdfViewData();
+
+        $this->assertSame('cairo', $data['pdfBodyFont']);
+        $this->assertSame('qomra', $data['pdfHeadingFont']);
+    }
+
     public function test_person_official_form_renders_to_pdf(): void
     {
         $location = Location::create(['name' => 'الحي الأول']);
@@ -44,7 +73,9 @@ class PersonPdfTest extends TestCase
         ]);
 
         $this->assertNotEmpty($bytes);
-        // Valid PDFs start with the "%PDF" magic header.
         $this->assertSame('%PDF', substr($bytes, 0, 4));
+        // mPDF embeds custom font subsets (internal names use MPDFAA+ prefix).
+        $this->assertStringContainsString('Cairo', $bytes);
+        $this->assertStringContainsString('Qomra', $bytes);
     }
 }

@@ -13,7 +13,8 @@ archiving, search/filtering, a statistics dashboard, and official Arabic RTL PDF
 - Local filesystem disk for archived documents (only file paths stored in DB)
 
 Everything runs locally with no internet connection required at runtime. All assets
-(JS/CSS) are published locally; the Arabic UI font uses the system font stack.
+(JS/CSS) are published locally. The admin panel uses **itf Qomra Arabic** (headings)
+and **Cairo** (body), matching exported PDFs.
 
 ## Requirements
 
@@ -62,6 +63,40 @@ Default admin credentials (change the password after first login):
   income-by-area chart, and CSV export of raw statistics.
 - `app/Services/PdfService.php` — decoupled mPDF renderer (HTML/Blade -> PDF bytes).
 - `resources/views/pdf/person-form.blade.php` — official RTL Arabic form template.
+- `resources/views/pdf/partials/brand-styles.blade.php` — Syrian brand tokens and `.sy-*` PDF styles.
+
+## PDF export fonts
+
+Official PDFs use the same visual identity as the Filament admin theme:
+
+| Role | Font | Path |
+|------|------|------|
+| Body / tables | Cairo (arabic + latin merged) | `resources/fonts/pdf/cairo/` |
+| Letterhead & section titles | itf Qomra Arabic | `resources/fonts/pdf/qomra/` (converted for mPDF) |
+
+Qomra ships as CFF outlines in `public/fonts/qomra/` (web UI). mPDF requires TrueType
+`glyf` outlines, so converted files are committed under `resources/fonts/pdf/qomra/`.
+
+To regenerate all PDF fonts (Cairo from fontsource + Qomra conversion):
+
+```bash
+npm install @fontsource/cairo --no-save
+pip install fonttools brotli
+python scripts/setup-pdf-fonts.py
+```
+
+Or only Qomra after updating `public/fonts/qomra/`:
+
+```bash
+pip install fonttools
+python scripts/convert-qomra-for-mpdf.py
+```
+
+If converted Qomra files are missing, PDF export still works and uses **Cairo Bold** for
+headings (a warning is written to the log).
+
+After changing PDF fonts or mPDF OTL settings, delete `storage/app/mpdf-temp` so mPDF
+regenerates font metrics caches.
 
 ## Document storage
 
