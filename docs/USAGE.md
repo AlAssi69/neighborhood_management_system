@@ -30,23 +30,25 @@
 
 | Navigation group (AR) | Resources | English purpose |
 |----------------------|-----------|-----------------|
-| **الإعدادات والبيانات المرجعية** | المناطق (العناوين) | Hierarchical address areas |
+| **الإعدادات والبيانات المرجعية** | المناطق (العناوين)، المناطق العقارية، المباني | Location tree, real-estate area lookup, buildings (floors on building edit) |
 | **السكان** | الأشخاص، العائلات | People and families |
 | **العقارات والمحال** | العقارات، المحال التجارية | Real estate and shops |
 | **لوحة المعلومات** | (home) | Statistics dashboard |
 
-**العربية:** المجموعات في الشريط الجانبي: بيانات مرجعية (مناطق)، سكان (أشخاص وعائلات)، عقارات ومحال، ولوحة المعلومات من الصفحة الرئيسية.
+**العربية:** بيانات مرجعية: **المناطق** (شجرة السكن، مع تبويب المباني)، **المناطق العقارية**، **المباني** (الطوابق من تعديل المبنى). ثم **السكان**، **العقارات والمحال**، و**لوحة المعلومات** من الصفحة الرئيسية.
 
 ## Recommended workflow / سير العمل الموصى به
 
 **English:**
 
-1. **Locations** — Build the area tree (parent regions, then sub-areas).
-2. **Properties** — Register each property with its location and real-estate area label.
-3. **Families** — Create family records (family card number, optional head of family).
-4. **People** — Add persons; assign family, phone, national ID.
-5. **Relations** — On a person’s edit page, attach properties (owner / tenant / vacant), businesses, and documents.
-6. **Export** — Generate the official PDF or dashboard CSV when needed.
+1. **Locations** — Build the residential area tree (parent regions, then sub-areas).
+2. **Buildings and floors** — For each location: building numbers, then floors per building (from **المباني** or the location’s buildings tab).
+3. **Real-estate areas** — Define **المناطق العقارية** (lookup list for properties and statistics).
+4. **Properties** — Register each property: real-estate area + property number, and residential address (location, building, floor, detail).
+5. **Families** — Create family records (family card number, optional head of family, member count).
+6. **People** — Add persons; assign family, phone, national ID (linked property numbers appear in the people list when attached).
+7. **Relations** — On a person’s edit page, attach properties (legal status), businesses, and documents.
+8. **Export** — Generate the official PDF or dashboard CSV when needed.
 
 **العربية:**
 
@@ -69,14 +71,14 @@
 
 **English:**
 
-- **العائلات (Families):** `family_card_number`, optional **head of family** (`head_person_id`). Use the **Members** relation tab to manage people in the family.
+- **العائلات (Families):** `family_card_number`, optional **head of family** (`head_person_id`), `total_member_count`. Use the **Members** relation tab to manage people in the family.
 - **الأشخاص (People):** `national_id`, `first_name`, `father_name`, `last_name`, `phone`, link to **family**.
 
 When editing a family, assign a head person from members. When a head person is deleted, the family head reference is cleared automatically.
 
 **العربية:**
 
-- **العائلات:** رقم بطاقة عائلية، رب عائلة اختياري، تبويب **الأعضاء**.
+- **العائلات:** رقم بطاقة عائلية، رب عائلة اختياري، عدد الأفراد، تبويب **الأعضاء**.
 - **الأشخاص:** رقم وطني، أسماء، هاتف، عائلة.
 
 ## Properties and businesses / العقارات والمحال
@@ -97,45 +99,64 @@ When editing a family, assign a head person from members. When a head person is 
 
 | Tab | Purpose |
 |-----|---------|
-| Properties | Attach properties with **legal status** (owner / tenant / vacant) via `person_property` pivot |
+| العقارات (الوضع القانوني) | Attach properties with **legal status** (owner / tenant / vacant) via `person_property` pivot; default when attaching is **tenant** (مستأجر) |
 | Businesses | Shops owned by this person |
 | Documents | Upload archived files (title, type, file) |
 
-You can also link a person to a property from the property side when editing residents.
+Property links are managed only from the person edit page (the property resource has no resident relation tab).
 
-**العربية:** من تعديل الشخص: تبويب **العقارات** (مالك / مستأجر / فروغ)، **المحال**، **المستندات**.
+**العربية:** من **الأشخاص → تعديل**: تبويب **العقارات (الوضع القانوني)** (مالك / مستأجر / فروغ — الافتراضي عند الربط: مستأجر)، **المحال**، **المستندات**. لا يوجد ربط من صفحة العقار.
 
 ## Search and filters / البحث والفلاتر
 
 **English:**
 
 - **Global search** (top bar): searches people by national ID, first/father/last name, and phone.
-- **List filters:** On **الأشخاص** and other list pages, use the filter icon to narrow rows (e.g. by family, location, property number — as configured on each table).
+- **People list columns:** includes **أرقام العقارات** (property numbers from linked properties) and searchable property number.
+- **People list filters** (filter icon on **الأشخاص**):
+
+| Filter | Effect |
+|--------|--------|
+| العائلة (family) | Person belongs to selected family |
+| المنطقة الجغرافية (area) | Person linked to a property in the selected location or any child area |
+| المنطقة العقارية (real-estate area) | Person linked to a property in that area |
+| رقم العقار (property number) | Partial match on linked property numbers |
+| حجم العائلة (min family members) | Family `total_member_count` is at least the entered value |
+
+Other resources may expose their own table filters as configured.
 
 **العربية:**
 
 - **البحث العام:** يبحث في الأشخاص بالرقم الوطني والأسماء والهاتف.
-- **فلاتر الجدول:** من أيقونة الفلتر في قوائم الأشخاص والموارد الأخرى لتضييق النتائج.
+- **أعمدة قائمة الأشخاص:** تتضمن **أرقام العقارات** عند الربط.
+- **فلاتر الأشخاص:** عائلة، منطقة جغرافية (شجرة السكن)، منطقة عقارية، رقم عقار، الحد الأدنى لعدد أفراد العائلة.
 
 ## Dashboard and CSV export / لوحة المعلومات وتصدير CSV
 
-**English:** **لوحة المعلومات** (home) shows:
+**English:** **لوحة المعلومات** (home) shows `NeighborhoodStatsOverview` with four stats:
 
-- Overview widgets: neighborhood statistics (`NeighborhoodStatsOverview`)
+| Widget | Meaning |
+|--------|---------|
+| إجمالي السكان | Registered people count |
+| عدد العائلات | Family records count |
+| المحال التجارية | Business records count |
+| العقارات | Property records count |
 
-Header action **تصدير الإحصائيات (CSV)** downloads a UTF-8 CSV (with BOM for Excel) grouping **population** by **real estate area** on linked properties.
+Header action **تصدير الإحصائيات (CSV)** downloads a UTF-8 CSV (with BOM for Excel) with columns **المنطقة العقارية** and **عدد السكان**. Each person is counted once per linked property’s real-estate area (if a person has no linked property or no area, they count under **غير محدد**). A person linked to multiple areas appears in each area’s count. Filename pattern: `neighborhood-stats-YYYYMMDD-HHMMSS.csv`.
 
-**العربية:** الصفحة الرئيسية تعرض إحصائيات عامة. زر **تصدير الإحصائيات (CSV)** يحمّل ملفاً بعدد السكان حسب المنطقة العقارية (BOM UTF-8 لـ Excel).
+**العربية:** أربع بطاقات: السكان، العائلات، المحال، العقارات. زر **تصدير الإحصائيات (CSV)** يصدّر عدد السكان لكل منطقة عقارية (BOM UTF-8 لـ Excel). الشخص المرتبط بعدة مناطق يُحسب في كل منطقة؛ بدون عقار مرتبط يُحسب تحت **غير محدد**.
 
 ## Official PDF export / تصدير النموذج الرسمي PDF
 
 **English:** On the **people list** or **person edit** page, use the action **نموذج رسمي (PDF)**. The system renders `resources/views/pdf/person-form.blade.php` through mPDF with RTL Arabic layout and Syrian brand styling.
 
+PDF sections: personal information, family data (card number, member count, head of family), properties (number, real-estate area, residential address, **legal status**), and businesses. There is no income field.
+
 The download filename is `person-{national_id}.pdf`. Letterhead uses `APP_NAME` from configuration.
 
 If Qomra PDF fonts are missing, headings fall back to Cairo Bold (see [DEVELOPMENT.md](DEVELOPMENT.md)).
 
-**العربية:** من قائمة الأشخاص أو صفحة التعديل: **نموذج رسمي (PDF)**. ملف RTL عربي بهوية بصرية سورية. اسم الملف يتضمن الرقم الوطني.
+**العربية:** من قائمة الأشخاص أو صفحة التعديل: **نموذج رسمي (PDF)**. الأقسام: شخصية، عائلية، عقارات (مع الوضع القانوني)، محال. ملف RTL عربي بهوية بصرية سورية. اسم الملف يتضمن الرقم الوطني.
 
 ## Document archiving / أرشفة المستندات
 

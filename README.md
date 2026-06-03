@@ -21,34 +21,35 @@
 
 **العربية:** يساعد النظام مسؤول الحي على تسجيل وإدارة معلومات السكان والعائلات والعقارات والمحال التجارية والعناوين الهرمية. يدعم البحث والفلترة ولوحة إحصائيات وأرشفة المستندات وإخراج نماذج رسمية بصيغة PDF عربية RTL. يعمل بالكامل محلياً دون حاجة للإنترنت أثناء التشغيل.
 
-Original functional requirements (Arabic): [req.txt](req.txt).
+Requirements: original Arabic brief [req.txt](req.txt); formal specification [SRS_v1.md](SRS_v1.md).
 
 ## Features / الميزات
 
 **English:**
 
 - Person records (national ID, name parts, phone, family link)
-- Family records (family card number, head of family, members)
-- Properties linked to hierarchical locations and to persons (owner / tenant / vacant legal status)
+- Family records (family card number, head of family, members, member count)
+- Hierarchical **locations** (منطقة السكن), **buildings**, and **floors** per location
+- **Real-estate areas** (المناطق العقارية) as a lookup for properties and statistics
+- Properties with residential address (location, building, floor, detail) and legal links to persons (owner / tenant / vacant)
 - Commercial businesses linked to properties and owners
-- Nested locations (unlimited parent/child areas)
 - Archived documents per person (filesystem storage, path-only in DB)
 - Arabic RTL Filament admin panel with CRUD, filters, and global search
-- Dashboard: population statistics overview
+- Dashboard: counts for people, families, businesses, and properties
 - CSV export of population by real-estate area from the dashboard
 - Official person form as print-ready Arabic PDF (mPDF)
 
 **العربية:**
 
 - سجلات الأشخاص (رقم وطني، اسم، هاتف، ربط بالعائلة)
-- سجلات العائلات (رقم بطاقة عائلية، رب الأسرة، الأعضاء)
-- العقارات مرتبطة بمناطق هرمية وبأشخاص (مالك / مستأجر / فروغ)
+- سجلات العائلات (رقم بطاقة عائلية، رب الأسرة، الأعضاء، عدد الأفراد)
+- **مناطق سكن** هرمية، **مباني** و**طوابق** لكل منطقة
+- **مناطق عقارية** مرجعية للعقارات والإحصائيات
+- العقارات بعنوان سكن (منطقة، بناء، طابق، تفصيلي) وربط قانوني بالأشخاص (مالك / مستأجر / فروغ)
 - المحال التجارية مرتبطة بالعقارات والمالكين
-- مناطق متداخلة (هرمية غير محدودة)
 - أرشفة مستندات لكل شخص (ملفات على القرص، المسار فقط في قاعدة البيانات)
 - لوحة إدارة Filament عربية RTL مع CRUD وفلاتر وبحث عام
-- لوحة معلومات: إحصائيات سكانية وتصدير CSV حسب المنطقة العقارية
-- تصدير إحصائيات الدخل بصيغة CSV
+- لوحة معلومات: إحصائيات (سكان، عائلات، محال، عقارات) وتصدير CSV حسب المنطقة العقارية
 - نموذج رسمي للشخص كـ PDF عربي جاهز للطباعة
 
 ## Stack / التقنيات
@@ -119,6 +120,8 @@ php artisan serve
 | [docs/USAGE.md](docs/USAGE.md) | Admin panel workflows | دليل الاستخدام |
 | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Tests, PDF fonts, dev setup | التطوير والاختبارات |
 | [docs/design/DESIGN.md](docs/design/DESIGN.md) | Brand and UI design tokens | هوية العلامة والتصميم |
+| [SRS_v1.md](SRS_v1.md) | Software requirements specification | مواصفات المتطلبات |
+| [req.txt](req.txt) | Original Arabic requirements brief | المتطلبات الأصلية بالعربية |
 
 ## Project structure / هيكل المشروع
 
@@ -126,8 +129,11 @@ php artisan serve
 
 ```
 app/
-  Models/                    # Person, Family, Property, Location, Business, ArchivedDocument
-  Filament/Resources/        # CRUD per entity; relation managers on Person & Family
+  Models/                    # Person, Family, Property, Location, Building, Floor,
+                             # RealEstateArea, Business, ArchivedDocument
+  Support/PropertyRelationType.php  # owner / tenant / vacant labels (Filament + PDF)
+  Filament/Resources/        # CRUD per entity; relation managers on Person, Family,
+                             # Location (buildings), Building (floors)
   Filament/Widgets/          # NeighborhoodStatsOverview
   Filament/Pages/            # Dashboard (CSV export)
   Services/PdfService.php    # mPDF HTML → PDF bytes
@@ -157,7 +163,12 @@ tests/Feature/               # Panel, filters, upload, PDF tests
 ```mermaid
 erDiagram
   Location ||--o{ Location : parent
-  Location ||--o{ Property : has
+  Location ||--o{ Building : has
+  Building ||--o{ Floor : has
+  RealEstateArea ||--o{ Property : classifies
+  Location ||--o{ Property : residential
+  Building ||--o{ Property : at
+  Floor ||--o{ Property : on
   Family ||--o{ Person : members
   Family ||--o| Person : head
   Person }o--o{ Property : person_property
@@ -166,17 +177,19 @@ erDiagram
   Person ||--o{ ArchivedDocument : archives
 ```
 
-**English:** `Person` belongs to `Family`; links to `Property` via `person_property` pivot (`relation_type`: owner, tenant, or vacant); owns `Business` records and `ArchivedDocument` files. `Property` belongs to `Location`. `Location` nests via `parent_id`.
+**English:** `Location` nests via `parent_id` and has `Building` records with `Floor` children. `Property` belongs to `RealEstateArea`, `Location`, `Building`, and `Floor`, and links to `Person` through `person_property` (`relation_type`: owner, tenant, or vacant). `Person` belongs to `Family`, owns `Business` records, and has `ArchivedDocument` files.
 
-**العربية:** `Person` ينتمي إلى `Family`؛ يرتبط بـ `Property` عبر جدول وسيط `person_property` (نوع العلاقة: ساكن أو مالك)؛ يملك `Business` و`ArchivedDocument`. `Property` تنتمي إلى `Location`. `Location` هرمية عبر `parent_id`.
+**العربية:** `Location` هرمية عبر `parent_id` وتحتوي `Building` و`Floor`. `Property` تنتمي إلى `RealEstateArea` و`Location` و`Building` و`Floor`، وترتبط بـ `Person` عبر `person_property` (الوضع القانوني: مالك / مستأجر / فروغ). `Person` ينتمي إلى `Family` ويملك `Business` و`ArchivedDocument`.
 
 ## Architecture pointers / نقاط معمارية
 
 **English:**
 
 - **Models:** `app/Models` — Eloquent relationships and domain attributes.
-- **Admin CRUD:** `app/Filament/Resources` — forms, tables, filters, cascading location selects.
-- **Person relations:** `app/Filament/Resources/People/RelationManagers` — properties, businesses, documents.
+- **Legal status labels:** `app/Support/PropertyRelationType.php` — shared by Filament pivot UI and PDF.
+- **Admin CRUD:** `app/Filament/Resources` — forms, tables, filters, cascading location/building/floor selects.
+- **Person relations:** `app/Filament/Resources/People/RelationManagers` — properties (legal status), businesses, documents.
+- **Reference data:** `Locations` (with buildings), `Buildings` (with floors), `RealEstateAreas`.
 - **Statistics:** `app/Filament/Widgets` + `app/Filament/Pages/Dashboard.php`.
 - **PDF export:** `app/Services/PdfService.php` + `resources/views/pdf/` + `config/pdf.php`.
 - **Document storage:** `filesystems` disk `documents`; DB stores `file_path` only — see [docs/USAGE.md](docs/USAGE.md).
@@ -186,8 +199,10 @@ For tests, PDF font regeneration, and mPDF cache, see [docs/DEVELOPMENT.md](docs
 **العربية:**
 
 - **النماذج:** `app/Models`
+- **الوضع القانوني:** `app/Support/PropertyRelationType.php`
 - **واجهة الإدارة:** `app/Filament/Resources`
 - **علاقات الشخص:** RelationManagers تحت `People/`
+- **البيانات المرجعية:** المناطق (مع المباني)، المباني (مع الطوابق)، المناطق العقارية
 - **الإحصائيات:** Widgets + Dashboard
 - **PDF:** PdfService + قوالب Blade + `config/pdf.php`
 - **المستندات:** قرص `documents` — المسار فقط في قاعدة البيانات

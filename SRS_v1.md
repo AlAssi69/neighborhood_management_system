@@ -18,12 +18,16 @@
 
 ## 3. Data Dictionary & Core Entities
 
-* **Person:** National ID (Primary Key), First Name, Father's Name, Last Name, Phone Number.
-* **Family:** Family Card Number (Primary Key), Head of Household ID, Total Member Count.
-* **Property (Real Estate):** Property Number, Real Estate Area, Main Area, Detailed Address, Floor Number.
-* **Address Hierarchy:** Location ID, Location Name, Parent Location ID (allowing for infinite nesting of areas).
-* **Business (Commercial Register):** Commercial Register Number, Business Name, Associated Property.
-* **Archived Document:** Document ID, Person ID, File Path, Document Type, Upload Timestamp.
+* **Person:** National ID (unique), First Name, Father's Name, Last Name, Phone Number, optional Family ID. No income field.
+* **Family:** Family Card Number (unique), optional Head of Household (Person ID), Total Member Count, optional notes.
+* **Location (residential hierarchy):** Name, optional Parent Location ID (infinite nesting for منطقة السكن).
+* **Building:** Location ID, Building Number (per location).
+* **Floor:** Building ID, Label, optional sort order.
+* **RealEstateArea:** Name (lookup for property registry and statistics — المنطقة العقارية).
+* **Property:** Property Number, Real Estate Area ID, Location ID (residential area), Building ID, Floor ID, Detailed Address. Computed full residential address combines location path, building, floor, and detail.
+* **Person–Property (pivot `person_property`):** Person ID, Property ID, `relation_type` enum: `owner`, `tenant`, or `vacant` (فروغ / مالك / مستأجر).
+* **Business:** Commercial Register Number, Business Name, Property ID, Owner Person ID.
+* **Archived Document:** Person ID, File Path (filesystem), Title, Document Type, timestamps.
 
 ---
 
@@ -31,9 +35,9 @@
 
 ### 4.1. Entity Management Module (CRUD)
 
-* Provide robust interfaces to Create, Read, Update, and Delete records for Persons, Families, Properties, and Businesses.
-* Validate National ID formats and alert users to duplicate entries.
-* Manage hierarchical address data efficiently through dynamic dropdowns (e.g., selecting a Main Area populates the Sub-Area options).
+* Provide robust interfaces to Create, Read, Update, and Delete records for Persons, Families, Properties, Businesses, Locations, Buildings, Floors, and Real Estate Areas.
+* Validate National ID format (numeric, 5–20 digits) and reject duplicate national IDs.
+* Manage hierarchical location data and cascading Building/Floor selects on property forms.
 
 ### 4.2. Relationship Mapping Module
 
@@ -46,19 +50,18 @@
 
 * Execute exact and partial text searches on names, IDs, and phone numbers.
 * Filter resident populations by specific geographic areas, real estate zones, or property numbers.
-* Apply compound filters, such as searching for families with more than five members in a given area.
+* Apply compound filters on the people list, including: family, geographic area (location subtree), real-estate area, property number, and minimum family member count (`total_member_count` on the linked family).
 
 ### 4.4. Dashboard and Statistical Reporting
 
-* Aggregate real-time neighborhood data to display total population, family count, and active businesses.
-* Generate population statistics grouped by real estate zone.
-* Export raw statistical data for external reporting.
+* Display dashboard widgets for: total registered people, family count, business count, and property count.
+* Export a UTF-8 CSV (with BOM for Excel) of population counts grouped by real-estate area, with columns **المنطقة العقارية** and **عدد السكان**. Persons linked to multiple areas are counted in each area; persons without a linked property area count under **غير محدد**. Filename pattern: `neighborhood-stats-YYYYMMDD-HHMMSS.csv`.
 
 ### 4.5. Document Archiving and PDF Export
 
 * Upload and securely link scanned documents (images/PDFs) directly to specific Person profiles.
 * Populate predefined official government web templates dynamically using system data.
-* Export these populated HTML views as formatted, print-ready PDF files for official use.
+* Export these populated HTML views as formatted, print-ready PDF files for official use. The person PDF includes personal data, family data, linked properties (with legal status), and businesses — not income.
 
 ---
 
@@ -78,5 +81,25 @@
 
 * The system must utilize a layered architecture, abstracting repetitive database queries to keep the codebase DRY (Don't Repeat Yourself).
 * The PDF generation logic must be completely decoupled from the core data-entry components.
+
+---
+
+## 6. Documentation and Implementation
+
+**Implementation stack (as built):** PHP 8.3+, Laravel 13, Filament v5.6 (single-admin panel at `/admin`), SQLite, mPDF 8.x for Arabic RTL PDFs, Vite + Tailwind for the admin theme.
+
+**Documentation map:**
+
+| Document | Role |
+|----------|------|
+| [req.txt](req.txt) | Original Arabic requirements brief |
+| [README.md](README.md) | Project overview, stack, structure, entity diagram |
+| [docs/README.md](docs/README.md) | Index of install/run/usage/developer guides |
+| [docs/INSTALLATION.md](docs/INSTALLATION.md) | Setup and troubleshooting |
+| [docs/RUNNING.md](docs/RUNNING.md) | Server, admin URL, backups |
+| [docs/USAGE.md](docs/USAGE.md) | Administrator workflows (authoritative for UI behavior) |
+| [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Tests, PDF fonts, migrations |
+
+This SRS is the requirements baseline. For day-to-day operation and current UI labels, prefer [docs/USAGE.md](docs/USAGE.md) when the two differ.
 
 ---

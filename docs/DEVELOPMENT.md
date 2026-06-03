@@ -7,6 +7,7 @@
 
 - [Running tests / تشغيل الاختبارات](#running-tests--تشغيل-الاختبارات)
 - [Test coverage / تغطية الاختبارات](#test-coverage--تغطية-الاختبارات)
+- [Domain enums and migrations / التعدادات والهجرات](#domain-enums-and-migrations--التعدادات-والهجرات)
 - [Document storage (technical) / تخزين المستندات (تقني)](#document-storage-technical--تخزين-المستندات-تقني)
 - [PDF export fonts / خطوط تصدير PDF](#pdf-export-fonts--خطوط-تصدير-pdf)
 - [Regenerating PDF fonts / إعادة توليد خطوط PDF](#regenerating-pdf-fonts--إعادة-توليد-خطوط-pdf)
@@ -41,18 +42,26 @@ php artisan test
 
 ## Test coverage / تغطية الاختبارات
 
-**English:** Feature tests under `tests/Feature/` include:
+**English:** Feature tests under `tests/Feature/`:
 
-| Area | Typical assertions |
-|------|-------------------|
-| Admin panel | Filament pages render for authenticated admin |
-| Filters | Compound list filters on people/properties |
-| Documents | Upload stores file on disk; DB holds path only |
-| PDF | Arabic RTL person form generates valid PDF bytes |
+| Test class | Coverage |
+|------------|----------|
+| `PanelSmokeTest` | Admin dashboard and CRUD index/create for `people`, `families`, `properties`, `businesses`, `locations`, `real-estate-areas`, `buildings`; edit pages with relation managers; `min_family_members` table filter |
+| `PersonPdfTest` | Bundled PDF fonts present; Cairo glyph coverage; RTL person PDF bytes; PDF must not contain income text |
+| `DocumentArchivingTest` | Upload to `documents` disk; DB stores path only |
+| `ExampleTest` | Laravel application smoke test |
 
 Add tests with `php artisan make:test --phpunit Feature/YourTest`.
 
-**العربية:** اختبارات في `tests/Feature/` تغطي عرض اللوحة، الفلاتر، رفع المستندات (مسار فقط)، وتوليد PDF عربي.
+**العربية:** `PanelSmokeTest` (كل الموارد بما فيها المباني والمناطق العقارية والفلاتر)، `PersonPdfTest` (خطوط وPDF بدون حقل دخل)، `DocumentArchivingTest`، `ExampleTest`.
+
+## Domain enums and migrations / التعدادات والهجرات
+
+**English:** Person–property **legal status** is defined in `app/Support/PropertyRelationType.php` (`owner`, `tenant`, `vacant`) and used in Filament relation managers and the person PDF template.
+
+If upgrading a database created before June 2026, run pending migrations. Migration `2026_06_03_185220_update_person_property_relation_types` maps legacy `resident` pivot values to `tenant` and sets the default to `tenant`. Migration `2026_06_03_185220_drop_income_from_people_table` removes the unused `income` column from `people`.
+
+**العربية:** الوضع القانوني في `PropertyRelationType` (مالك / مستأجر / فروغ). عند ترقية قاعدة قديمة نفّذ الهجرات؛ `resident` يُحوَّل إلى `tenant` ويُزال عمود `income`.
 
 ## Document storage (technical) / تخزين المستندات (تقني)
 
@@ -142,6 +151,7 @@ PDF partial styles: `resources/views/pdf/partials/brand-styles.blade.php`.
 - [RUNNING.md](RUNNING.md) — start server and URLs
 - [USAGE.md](USAGE.md) — admin workflows
 - [../README.md](../README.md) — architecture and data model
+- [../SRS_v1.md](../SRS_v1.md) — requirements specification
 
 **العربية:**
 
@@ -149,3 +159,4 @@ PDF partial styles: `resources/views/pdf/partials/brand-styles.blade.php`.
 - [RUNNING.md](RUNNING.md) — التشغيل
 - [USAGE.md](USAGE.md) — الاستخدام
 - [../README.md](../README.md) — المعمارية ونموذج البيانات
+- [../SRS_v1.md](../SRS_v1.md) — مواصفات المتطلبات

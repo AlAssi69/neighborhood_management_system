@@ -51,6 +51,12 @@
 
 ## Project root / جذر المشروع
 
-**English:** Return to the main [README.md](../README.md) for project overview, stack summary, directory tree, and entity relationship diagram.
+**English:** Requirements documents describe *what* the system should do; guides under `docs/` describe *how* to install, run, and use it.
 
-**العربية:** ارجع إلى [README.md](../README.md) للنظرة العامة والهيكل ومخطط العلاقات بين الكيانات.
+| Document | Purpose |
+|----------|---------|
+| [../README.md](../README.md) | Project overview, stack, directory tree, entity diagram |
+| [../SRS_v1.md](../SRS_v1.md) | Formal software requirements specification (English) |
+| [../req.txt](../req.txt) | Original Arabic functional requirements brief |
+
+**العربية:** مواصفات المتطلبات (SRS و req.txt) توضّح *ماذا* يبني النظام؛ أدلة `docs/` توضّح *كيف* تثبّته وتشغّله وتستخدمه. للنظرة العامة والهيكل ارجع إلى [README.md](../README.md).
