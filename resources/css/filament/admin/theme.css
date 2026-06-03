@@ -170,12 +170,12 @@ html:not(.dark) .fi-topbar nav {
 }
 
 html:not(.dark) .fi-sidebar {
-    @apply border-e border-sy-border-strong bg-sy-green-pale;
+    @apply border-e border-sy-border-strong bg-sy-white;
     --tw-ring-shadow: none;
 }
 
 html:not(.dark) .fi-sidebar-header {
-    @apply border-b border-sy-border-green bg-sy-green-soft;
+    @apply border-b border-sy-border-gold bg-sy-green-pale;
 }
 
 html:not(.dark) .fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn {
@@ -194,23 +194,48 @@ html:not(.dark) .fi-section-header-icon {
     @apply text-sy-gold;
 }
 
-html:not(.dark) .fi-sidebar-item-button {
-    @apply relative font-medium text-sy-gray hover:bg-sy-green-soft hover:text-sy-green-deep;
+html:not(.dark) .fi-sidebar-group-label {
+    @apply font-semibold text-sy-green-deep;
 }
 
-html:not(.dark) .fi-sidebar-item-button.fi-active,
-html:not(.dark) .fi-sidebar-item.fi-active .fi-sidebar-item-button {
+html:not(.dark) .fi-sidebar-group-btn .fi-icon,
+html:not(.dark) .fi-sidebar-group-dropdown-trigger-btn .fi-icon {
+    @apply text-sy-bronze;
+}
+
+html:not(.dark) .fi-sidebar-item-btn {
+    @apply relative font-medium;
+}
+
+html:not(.dark) .fi-sidebar-item-btn .fi-sidebar-item-label {
+    @apply text-sy-ink;
+}
+
+html:not(.dark) .fi-sidebar-item-btn .fi-sidebar-item-icon,
+html:not(.dark) .fi-sidebar-item-btn > .fi-icon {
+    @apply text-sy-green-mid;
+}
+
+html:not(.dark) .fi-sidebar-item-btn:hover {
+    @apply bg-sy-green-soft;
+}
+
+html:not(.dark) .fi-sidebar-item-btn:hover .fi-sidebar-item-label {
+    @apply text-sy-green-deep;
+}
+
+html:not(.dark) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
     @apply bg-sy-green text-sy-on-primary shadow-sm;
     border-inline-start: 4px solid var(--sy-gold);
 }
 
-html:not(.dark) .fi-sidebar-item.fi-active .fi-sidebar-item-icon,
-html:not(.dark) .fi-sidebar-item-button.fi-active .fi-sidebar-item-icon {
-    @apply text-sy-gold;
+html:not(.dark) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn .fi-sidebar-item-label {
+    @apply text-sy-on-primary;
 }
 
-html:not(.dark) .fi-sidebar-item.fi-active .fi-sidebar-item-label {
-    @apply text-sy-on-primary;
+html:not(.dark) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn .fi-sidebar-item-icon,
+html:not(.dark) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon {
+    @apply text-sy-gold;
 }
 
 html:not(.dark) .fi-topbar-item-button {
@@ -277,22 +302,21 @@ html.dark .fi-section-header-icon {
     @apply text-sy-gold;
 }
 
-html.dark .fi-sidebar-item-button {
+html.dark .fi-sidebar-item-btn {
     @apply relative font-medium text-sy-gray hover:bg-sy-green-soft hover:text-sy-accent;
 }
 
-html.dark .fi-sidebar-item-button.fi-active,
-html.dark .fi-sidebar-item.fi-active .fi-sidebar-item-button {
+html.dark .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
     @apply bg-sy-green-deep text-sy-accent;
     box-shadow: inset 0 -4px 0 0 var(--sy-gold);
 }
 
-html.dark .fi-sidebar-item.fi-active .fi-sidebar-item-icon,
-html.dark .fi-sidebar-item-button.fi-active .fi-sidebar-item-icon {
+html.dark .fi-sidebar-item.fi-active > .fi-sidebar-item-btn .fi-sidebar-item-icon,
+html.dark .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon {
     @apply text-sy-gold;
 }
 
-html.dark .fi-sidebar-item.fi-active .fi-sidebar-item-label {
+html.dark .fi-sidebar-item.fi-active > .fi-sidebar-item-btn .fi-sidebar-item-label {
     @apply text-sy-accent;
 }
 
